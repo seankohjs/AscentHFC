@@ -27,6 +27,25 @@ with a database of documents and uses natural language processing to deliver acc
 context-aware responses.
 """)
 
+# Feedback form in the sidebar
+with st.sidebar.form(key="feedback_form"):
+    st.write("We'd love to hear your feedback!")
+    feedback = st.text_area(
+        "How was your experience with the bot?",
+        placeholder="Enter your feedback here...",
+        height=100,
+    )
+    submit_feedback = st.form_submit_button("Submit Feedback")
+
+    if submit_feedback:
+        if feedback:  # Check if feedback is not empty
+            # Save feedback to a file (append mode)
+            with open("feedback.txt", "a") as f:
+                f.write(f"Feedback: {feedback}\n\n")  # Append feedback with a separator
+            st.sidebar.success("Thank you for your feedback! We appreciate it.")
+        else:
+            st.sidebar.warning("Please enter some feedback before submitting.")
+
 # Initialize ChromaDB with path to local database
 chroma_client = chromadb.PersistentClient(path="./chroma_db")
 collection = chroma_client.get_collection("test_collection")
