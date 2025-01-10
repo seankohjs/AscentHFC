@@ -11,12 +11,21 @@ load_dotenv()
 def create_embedding(text: str) -> List[float]:
     """Create embedding for a single piece of text"""
     result = genai.embed_content(
-        model="models/text-embedding-004",  # Make sure this model is available
+        model="models/text-embedding-004",  
         content=text
     )
     return result['embedding']
 
-st.title("Gemini Chat App with Document Search")
+st.title("Government Scheme Assistance Bot")
+
+# Sidebar with app explanation
+st.sidebar.title("About This App")
+st.sidebar.write("""
+This app is designed to assist users in navigating and understanding various government schemes. 
+It uses advanced AI to provide relevant information based on user queries. The app integrates 
+with a database of documents and uses natural language processing to deliver accurate and 
+context-aware responses.
+""")
 
 # Initialize ChromaDB with path to local database
 chroma_client = chromadb.PersistentClient(path="./chroma_db")
@@ -66,7 +75,7 @@ if prompt := st.chat_input("What is up?"):
         # Query ChromaDB using the embedding
         results = collection.query(
             query_embeddings=[query_embedding],
-            n_results=5  # Get top 3 most relevant documents
+            n_results=5  # Get top 5 most relevant documents
         )
         
         # Prepare context from retrieved documents
@@ -98,3 +107,10 @@ Please provide a response that incorporates relevant information from the contex
         
     except Exception as e:
         st.error(f"An error occurred: {str(e)}")
+
+# Conditionally display the "End Chat" button in the sidebar
+if len(st.session_state.messages) > 0:
+    if st.sidebar.button("End Chat"):
+        st.session_state.messages = []  # Clear chat history
+        st.session_state.chat_session = st.session_state.model.start_chat(history=[])  # Reset chat session
+        st.rerun() # plan to change this to ask for feedback
