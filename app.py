@@ -28,6 +28,7 @@ model = genai.GenerativeModel(
     generation_config=generation_config,
 )
 
+context = f"context hello"
 
 # Initialize chat_history *only once*
 if "chat_history" not in st.session_state:
@@ -36,7 +37,9 @@ if "chat_history" not in st.session_state:
 # Initialize chat_session *only once* (outside the main logic)
 if "chat_session" not in st.session_state:
     st.session_state.chat_session = model.start_chat()
-
+    # Send context as the first message, but don't store the initial response:
+    st.session_state.chat_session.send_message(context)  
+    st.session_state.chat_history.append({"role": "system", "content": context})  # Add context for display (optional - you might want to hide the context too)
 chat_session = st.session_state.chat_session  # Access it here
 
 st.title("HFC Chat")
