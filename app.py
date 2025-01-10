@@ -3,7 +3,7 @@ import google.generativeai as genai
 from dotenv import load_dotenv
 import streamlit as st
 import chromadb
-from chromadb.utils import embedding_functions
+
 
 # Load environment variables from .env file
 load_dotenv()
