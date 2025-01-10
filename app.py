@@ -1,38 +1,31 @@
-import os
-import google.generativeai as genai
-from dotenv import load_dotenv
 import streamlit as st
+import os
+from dotenv import load_dotenv
+import google.generativeai as genai
 import chromadb
+from typing import List
 
-
-# Load environment variables from .env file
+# Load environment variables
 load_dotenv()
 
-# Get the API key from environment variable
-api_key = os.getenv("GEMINI_API_KEY")
-
-if not api_key:
-    st.error("GEMINI_API_KEY environment variable not set or found in .env file.")
-    st.stop()
-
-# Configure Gemini
-genai.configure(api_key=api_key)
-
-# Initialize ChromaDB
-client = chromadb.PersistentClient(path="./chroma_db")
-collection_name = "test_collection"
-collection = client.get_collection(name=collection_name)
-
-# Function to create embeddings using Gemini
-def create_embedding(text: str) -> list[float]:
-    """Create embedding for a single piece of text using Gemini"""
+def create_embedding(text: str) -> List[float]:
+    """Create embedding for a single piece of text"""
     result = genai.embed_content(
-        model="models/text-embedding-004",  # Ensure this model is available
+        model="models/text-embedding-004",  # Make sure this model is available
         content=text
     )
     return result['embedding']
 
-# Create the model configuration *outside* the rerun scope
+st.title("Gemini Chat App with Document Search")
+
+# Initialize ChromaDB with path to local database
+chroma_client = chromadb.PersistentClient(path="./chroma_db")
+collection = chroma_client.get_collection("test_collection")
+
+# Configure Gemini API using key from .env
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+
+# Generation config
 generation_config = {
     "temperature": 1,
     "top_p": 0.95,
@@ -40,60 +33,68 @@ generation_config = {
     "max_output_tokens": 8192,
     "response_mime_type": "text/plain",
 }
-model = genai.GenerativeModel(
-    model_name="gemini-2.0-flash-exp",
-    generation_config=generation_config,
-)
 
-# Initialize chat_history *only once*
-if "chat_history" not in st.session_state:
-    st.session_state.chat_history = []
+# Initialize model and chat session in session state
+if "model" not in st.session_state:
+    st.session_state.model = genai.GenerativeModel(
+        model_name="gemini-2.0-flash-exp",
+        generation_config=generation_config,
+    )
 
-# Initialize chat_session *only once* (outside the main logic)
 if "chat_session" not in st.session_state:
-    st.session_state.chat_session = model.start_chat()
-    st.session_state.chat_history.append({"role": "system", "content": "How can I assist you today?"})  # Initial system message
-chat_session = st.session_state.chat_session  # Access it here
+    st.session_state.chat_session = st.session_state.model.start_chat(history=[])
 
-st.title("HFC Chat")
+if "messages" not in st.session_state:
+    st.session_state.messages = []
 
-user_input = st.text_input("You:", key="user_input", placeholder="Type your message here...")
+# Display chat messages
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
 
-if user_input:
+# Chat input
+if prompt := st.chat_input("What is up?"):
+    # Add user message to chat
+    st.session_state.messages.append({"role": "user", "content": prompt})
+    with st.chat_message("user"):
+        st.markdown(prompt)
+    
     try:
-        # Step 1: Create embedding for the user's query
-        query_embedding = create_embedding(user_input)
-
-        # Step 2: Query ChromaDB for the most relevant documents
+        # Create embedding for the query
+        query_embedding = create_embedding(prompt)
+        
+        # Query ChromaDB using the embedding
         results = collection.query(
             query_embeddings=[query_embedding],
-            n_results=5,  # Retrieve top 3 most relevant documents
-            include=["documents", "metadatas"]
+            n_results=5  # Get top 3 most relevant documents
         )
+        
+        # Prepare context from retrieved documents
+        context_docs = results['documents'][0]  # List of retrieved document texts
+        
+        # Create enhanced prompt with context
+        enhanced_prompt = f"""Based on the following context and the user's question, provide a relevant answer.
 
-        # Step 3: Combine the retrieved documents into a context for the LLM
-        context = "Here are some relevant documents from the database:\n"
-        for i, (doc, metadata) in enumerate(zip(results['documents'][0], results['metadatas'][0])):
-            context += f"\nDocument {i+1} (Page {metadata['page']}):\n{doc}\n"
+Context from documents:
+{' '.join(context_docs)}
 
-        # Step 4: Send the user's query along with the context to the LLM
-        full_query = f"{context}\n\nUser's query: {user_input}"
-        response = chat_session.send_message(full_query)
+User's question: {prompt}
 
-        # Step 5: Update chat history
-        st.session_state.chat_history.append({"role": "user", "content": user_input})
-        st.session_state.chat_history.append({"role": "assistant", "content": response.text})
-
-    except Exception as e:
-        st.error(f"An error occurred: {e}")
-
-# Display chat history
-for message in st.session_state.chat_history:
-    role = message["role"]
-    content = message["content"]
-    if role == "user":
-        with st.chat_message("user"):
-            st.write(content)
-    elif role == "assistant":
+Please provide a response that incorporates relevant information from the context."""
+        
+        # Generate Gemini response with context
         with st.chat_message("assistant"):
-            st.write(content)
+            # Show retrieved documents in expander (for debugging)
+            with st.expander("Retrieved Documents"):
+                for i, doc in enumerate(context_docs, 1):
+                    st.write(f"Document {i}:", doc)
+            
+            # Get response from Gemini
+            response = st.session_state.chat_session.send_message(enhanced_prompt)
+            st.markdown(response.text)
+            
+        # Add assistant response to chat history
+        st.session_state.messages.append({"role": "assistant", "content": response.text})
+        
+    except Exception as e:
+        st.error(f"An error occurred: {str(e)}")
