@@ -16,6 +16,15 @@ def create_embedding(text: str) -> List[float]:
     )
     return result['embedding']
 
+def count_tokens(text: str, model: genai.GenerativeModel) -> int:
+    """Counts tokens in a given text using the model's tokenizer."""
+    try:
+        response = model.count_tokens(text)
+        return response.total_tokens
+    except Exception as e:
+      st.error(f"Error counting tokens: {e}")
+      return 0
+
 st.title("Government Scheme Assistance Bot")
 
 # Sidebar with app explanation
@@ -75,6 +84,12 @@ if "chat_session" not in st.session_state:
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
+# Initialize token counters in session state
+if "total_input_tokens" not in st.session_state:
+    st.session_state.total_input_tokens = 0
+if "total_output_tokens" not in st.session_state:
+  st.session_state.total_output_tokens = 0
+
 # Display chat messages
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
@@ -110,6 +125,10 @@ User's question: {prompt}
 
 Please provide a response that incorporates relevant information from the context."""
         
+         # Count input tokens using the enhanced prompt
+        input_tokens = count_tokens(enhanced_prompt, st.session_state.model)
+        st.session_state.total_input_tokens += input_tokens
+        
         # Generate Gemini response with context
         with st.chat_message("assistant"):
             # Show retrieved documents in expander (for debugging)
@@ -121,6 +140,10 @@ Please provide a response that incorporates relevant information from the contex
             response = st.session_state.chat_session.send_message(enhanced_prompt)
             st.markdown(response.text)
             
+            # Count response tokens
+            output_tokens = count_tokens(response.text, st.session_state.model)
+            st.session_state.total_output_tokens += output_tokens
+        
         # Add assistant response to chat history
         st.session_state.messages.append({"role": "assistant", "content": response.text})
         
@@ -132,4 +155,13 @@ if len(st.session_state.messages) > 0:
     if st.sidebar.button("End Chat"):
         st.session_state.messages = []  # Clear chat history
         st.session_state.chat_session = st.session_state.model.start_chat(history=[])  # Reset chat session
+        st.session_state.total_input_tokens = 0
+        st.session_state.total_output_tokens = 0
         st.rerun() # plan to change this to ask for feedback
+
+# Display token counts in sidebar
+st.sidebar.markdown("---")
+st.sidebar.subheader("Token Usage")
+st.sidebar.write(f"Total Input Tokens: {st.session_state.total_input_tokens}")
+st.sidebar.write(f"Total Output Tokens: {st.session_state.total_output_tokens}")
+st.sidebar.write(f"Total Tokens: {st.session_state.total_input_tokens + st.session_state.total_output_tokens}")
