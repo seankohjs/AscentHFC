@@ -32,7 +32,7 @@ def sanitize_text(text):
     text = re.sub(r'(?<!\$)(?<!\\)\$(?!\$)', r'\$', text)
     return text
 
-st.title("KaisuKaki")
+st.title("KiasuKaki")
 
 # Sidebar with app explanation
 st.sidebar.title("How Can I Help?")
