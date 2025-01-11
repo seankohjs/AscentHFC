@@ -34,14 +34,14 @@ def load_feedback_data(file_path: str) -> List[str]:
         return []
 
 
-st.title("Policy Feedback Analysis Tool")
+st.title("Policy Feedback Analysis Chatbot")
 
 # Sidebar with app explanation
-st.sidebar.title("How to Use This App")
+st.sidebar.title("How to Use This Chatbot")
 st.sidebar.write("""
-This app is designed to help analyze feedback about government policies and schemes.
-You can load feedback data from the file, view the raw feedback, and then ask the LLM 
-to provide insights or analysis based on the feedback.
+This chatbot is designed to help analyze feedback about government policies and schemes.
+You can interact with the chatbot to ask specific questions or request analysis
+of the feedback data.
 """)
 
 # Configure Gemini API using key from .env
@@ -66,27 +66,38 @@ if "model" not in st.session_state:
 if "chat_session" not in st.session_state:
     st.session_state.chat_session = st.session_state.model.start_chat(history=[])
 
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+    
+
 # Load feedback data
 feedback_file_path = "policy_feedback.txt"
 feedback_data = load_feedback_data(feedback_file_path)
 
 # Display raw feedback data
-st.subheader("Raw Feedback Data")
-if feedback_data:
-    for line in feedback_data:
-      st.write(line)
-else:
-  st.write("No feedback data found")
-  
-
-# Text Input for LLM Query
-query = st.text_input("Enter your query for LLM analysis:")
-
-
-# LLM Analysis Button and Result Display
-if st.button("Analyze Feedback"):
+with st.expander("View Raw Feedback"):
     if feedback_data:
-      if query:
+        for line in feedback_data:
+            st.write(line)
+    else:
+        st.write("No feedback data found")
+
+
+# Display chat messages
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
+
+
+# Chat input
+if prompt := st.chat_input("Enter your query here"):
+    # Add user message to chat
+    st.session_state.messages.append({"role": "user", "content": prompt})
+    with st.chat_message("user"):
+        st.markdown(prompt)
+    
+    try:
+        if feedback_data:
             # Join all feedback into a single string for context
             feedback_context = "\n".join(feedback_data)
             
@@ -104,17 +115,31 @@ if st.button("Analyze Feedback"):
             7. Use headers where necessary to organize information effectively and enhance reader understanding.
              """
             
-            # Count input tokens using the enhanced prompt
-            input_tokens = count_tokens(enhanced_prompt + query, st.session_state.model)
-
+             # Count input tokens using the enhanced prompt
+            input_tokens = count_tokens(enhanced_prompt + prompt, st.session_state.model)
+            
             # Generate Gemini response with context
-            with st.spinner("Analyzing feedback..."):
-                  response = st.session_state.chat_session.send_message(enhanced_prompt + query)
-                  sanitized_response_text = sanitize_text(response.text)
-                  st.markdown(sanitized_response_text)
-                  output_tokens = count_tokens(response.text, st.session_state.model)
-                  st.write(f"Total Tokens: {input_tokens + output_tokens}")
-      else:
-          st.warning("Please enter a query to analyze the feedback.")
-    else:
-      st.warning("No feedback data found, please try again after the user has provided feedback.")
+            with st.chat_message("assistant"):
+                response = st.session_state.chat_session.send_message(enhanced_prompt + prompt)
+                sanitized_response_text = sanitize_text(response.text)
+                st.markdown(sanitized_response_text)
+                output_tokens = count_tokens(response.text, st.session_state.model)
+                st.write(f"Total Tokens: {input_tokens + output_tokens}")
+
+            
+            # Add assistant response to chat history
+            st.session_state.messages.append({"role": "assistant", "content": sanitized_response_text})
+                
+        else:
+            st.warning("No feedback data found, please try again after the user has provided feedback.")
+
+    except Exception as e:
+        st.error(f"An error occurred: {str(e)}")
+        
+
+# Conditionally display the "End Chat" button in the sidebar
+if len(st.session_state.messages) > 0:
+    if st.sidebar.button("End Chat"):
+        st.session_state.messages = []  # Clear chat history
+        st.session_state.chat_session = st.session_state.model.start_chat(history=[])  # Reset chat session
+        st.rerun()
