@@ -27,40 +27,43 @@ def count_tokens(text: str, model: genai.GenerativeModel) -> int:
       return 0
 
 def sanitize_text(text):
-
+    """Escapes lone dollar signs, preserving spacing."""
     # Escape single dollar signs that are not part of LaTeX expressions, preserving spacing
     text = re.sub(r'(?<!\$)(?<!\\)\$(?!\$)', r'\$', text)
     return text
 
-st.title("Government Scheme Assistance Bot")
+st.title("KaisuKaki")
 
 # Sidebar with app explanation
-st.sidebar.title("About This App")
+st.sidebar.title("How Can I Help?")
 st.sidebar.write("""
-This app is designed to assist users in navigating and understanding various government schemes. 
-It uses advanced AI to provide relevant information based on user queries. The app integrates 
-with a database of documents and uses natural language processing to deliver accurate and 
-context-aware responses.
+This chatbot is here to help you find information about various government schemes. 
+Just ask your question, and I'll do my best to provide you with clear and accurate 
+answers based on the documents I have available. I aim to make government information 
+easier to understand and access for everyone.
 """)
 
 # Feedback form in the sidebar
-with st.sidebar.form(key="feedback_form"):
-    st.write("We'd love to hear your feedback!")
+with st.sidebar.form(key="policy_feedback_form"):
+    st.write("Tell us what you think about the government schemes:")
     feedback = st.text_area(
-        "How was your experience with the bot?",
+        "What are your thoughts on the policies/schemes discussed?",
         placeholder="Enter your feedback here...",
-        height=100,
+        height=150,
     )
+    
+    rating = st.slider("On a scale of 1 to 5, how helpful do you find these schemes?", 1, 5, 3)
+    
     submit_feedback = st.form_submit_button("Submit Feedback")
 
     if submit_feedback:
         if feedback:  # Check if feedback is not empty
             # Save feedback to a file (append mode)
-            with open("feedback.txt", "a") as f:
-                f.write(f"Feedback: {feedback}\n\n")  # Append feedback with a separator
-            st.sidebar.success("Thank you for your feedback! We appreciate it.")
+            with open("policy_feedback.txt", "a") as f:
+                f.write(f"Feedback: {feedback}\nRating: {rating}\n\n")  # Append feedback with a separator
+            st.sidebar.success("Thank you for your feedback! It's very valuable.")
         else:
-            st.sidebar.warning("Please enter some feedback before submitting.")
+            st.sidebar.warning("Please provide some feedback before submitting.")
 
 # Initialize ChromaDB with path to local database
 chroma_client = chromadb.PersistentClient(path="./chroma_db")
@@ -135,7 +138,7 @@ if prompt := st.chat_input("Type something"):
         Instructions:
         1. Base your response ONLY on the provided context from the documents. Avoid introducing external knowledge or assumptions.
         2. Provide a clear and concise answer that is easy to understand for the average citizen. Do not include italicized words, bold text, or any special formatting unless explicitly required by the user. The output text should contain only standard text characters.
-        3. If the provided context does not fully answer the question, state that you do not have enough information to answer from the provided sources and that the user may need to consult the original source documents, or official authorities. Do not provide a speculative answer.
+        3. If the provided context does not fully answer the question, or if the user's question is ambiguous, state that you do not have enough information to answer from the provided sources and that the user may need to consult the original source documents, or official authorities, or ask additional clarifying questions. Then, **ask a specific clarifying question** to help you better understand the user's needs.
         4. When applicable, include specific details like dates, amounts, or specific scheme names from the context to be most accurate. Ensure that numerical ranges are formatted correctly with spaces (e.g., "200 to 400"), and there is a space after any number and before any word. Remove any extraneous text, such as the names of schemes or documents, that may be next to each requirement if they do not add clarity.
         5. Avoid carrying over formatting from source documents that may include italics, bold text, or other stylistic choices unless they are necessary for clarity.
         6. If the provided context has multiple options that may answer the question, provide all options, and explain all of them clearly.
@@ -146,8 +149,8 @@ if prompt := st.chat_input("Type something"):
         11. Use bullet points for lists to make information easy to digest.
         12. Use headers where necessary to organize information effectively and enhance reader understanding.
         13. Sanitize the output to ensure that text is clean and consistent, avoiding any carryover of special formatting or symbols from source documents, and that text is spaced correctly with numbers.
-        14. if u receive text like 200to400, add spacing between them and replace the italic characters with normal ones.
-        15. The response should only have standard text characters, no html characters or special characters.
+        14. The response should only have standard text characters, no html characters or special characters.
+        15. If you do not have enough information to provide an answer, ask a clarifying question so that the user can be more specific to give you enough information to answer their question.
         """
         
          # Count input tokens using the enhanced prompt
@@ -156,30 +159,12 @@ if prompt := st.chat_input("Type something"):
         
         # Generate Gemini response with context
         with st.chat_message("assistant"):
-            # # Show retrieved documents in expander (for debugging)
-            # with st.expander("Retrieved Documents"):
-            #   for i, (doc, metadata) in enumerate(zip(context_docs, context_metadata), 1):
-            #       sanitized_doc = sanitize_text(doc)
-            #       st.write(f"Document {i} (Source: {metadata['source']}):", sanitized_doc)
 
             # Get response from Gemini
             response = st.session_state.chat_session.send_message(enhanced_prompt)
 
-            # Debug: Show the raw response text before sanitation
-            # with st.expander("Raw Assistant Response (Before Sanitation)"):
-            #     st.text(response.text)
-            
-            # # Debug: Show the raw response text as unicode escape
-            # with st.expander("Raw Assistant Response (Before Sanitation) - Unicode Escape"):
-            #     st.text(response.text.encode('unicode_escape').decode('utf-8'))
-            
             sanitized_response_text = sanitize_text(response.text)
-            
-            #Debug: Show the sanitized text after sanitation
-            # with st.expander("Sanitized Assistant Response (After Sanitation)"):
-            #     st.text(sanitized_response_text)
-            
-            
+
             st.markdown(sanitized_response_text)
             
             # Count response tokens
@@ -201,9 +186,9 @@ if len(st.session_state.messages) > 0:
         st.session_state.total_output_tokens = 0
         st.rerun() # plan to change this to ask for feedback
 
-# Display token counts in sidebar
-st.sidebar.markdown("---")
-st.sidebar.subheader("Token Usage")
-st.sidebar.write(f"Total Input Tokens: {st.session_state.total_input_tokens}")
-st.sidebar.write(f"Total Output Tokens: {st.session_state.total_output_tokens}")
-st.sidebar.write(f"Total Tokens: {st.session_state.total_input_tokens + st.session_state.total_output_tokens}")
+# # Display token counts in sidebar (For debugging purposes)
+# st.sidebar.markdown("---")
+# st.sidebar.subheader("Token Usage")
+# st.sidebar.write(f"Total Input Tokens: {st.session_state.total_input_tokens}")
+# st.sidebar.write(f"Total Output Tokens: {st.session_state.total_output_tokens}")
+# st.sidebar.write(f"Total Tokens: {st.session_state.total_input_tokens + st.session_state.total_output_tokens}")
