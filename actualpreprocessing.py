@@ -5,6 +5,7 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.document_loaders import PyPDFLoader
 from typing import List
 from dotenv import load_dotenv
+import re
 
 # Load environment variables
 load_dotenv()
@@ -36,6 +37,19 @@ def chunk_text(text: str) -> List[str]:
     )
     return text_splitter.split_text(text)
 
+def clean_text(text: str) -> str:
+    """Removes italics, special characters, and ensures plain text."""
+    # Remove italics
+    text = re.sub(r'[\*_]', '', text)  # Remove * and _ for italics
+    
+    # Remove special characters
+    text = re.sub(r'[^\x00-\x7F]+', ' ', text)  # Keep only ASCII characters and replace non-ascii with space
+    
+     # Remove multiple spaces
+    text = re.sub(r'\s+', ' ', text).strip()
+
+    return text
+
 # Directory containing PDF documents
 documents_folder = "documents"
 
@@ -49,7 +63,8 @@ for filename in os.listdir(documents_folder):
             pdf_document = loader.load()
 
             for i, page in enumerate(pdf_document):
-                chunks = chunk_text(page.page_content)
+                cleaned_content = clean_text(page.page_content)
+                chunks = chunk_text(cleaned_content)
                 for j, chunk in enumerate(chunks):
                     embedding = create_embedding(chunk)
                     collection.add(
@@ -64,37 +79,27 @@ for filename in os.listdir(documents_folder):
 
 # Test queries for budget documents
 test_queries = [
-    "What are the key budget allocations?",
-    "Summarize the key findings and proposals",
-    "Are there any changes in tax regulations?",
-    "What is the budget for education?",
-    "What is the budget for healthcare?",
-    "What is the budget for social welfare",
-    "Explain the main topics mentioned in the budget",
-    "What initiatives are mentioned in the budget?",
-    "What are the proposed policy changes in the budget?",
-    "What is the total budget?",
-    "What are the economic projections of this budget?"
+    "what are the requirements for the cost of living payments ?"
 
 ]
 
 
-# print("\nTesting queries...")
-# for query in test_queries:
-#     print(f"\nQuery: {query}")
-#     query_embedding = create_embedding(query)
-#     results = collection.query(
-#         query_embeddings=[query_embedding],
-#         n_results=2,
-#         include=["documents", "distances", "metadatas"]
-#     )
-#     for i, (doc, distance, metadata) in enumerate(zip(
-#         results['documents'][0], results['distances'][0], results['metadatas'][0]
-#     )):
-#         similarity = 1 - (distance / 2)
-#         print(f"\nResult {i+1}:")
-#         print(f"Text: {doc.strip()}")
-#         print(f"Similarity Score: {similarity:.2f}")
-#         print(f"Source: {metadata['source']}, Page: {metadata['page']}")
+print("\nTesting queries...")
+for query in test_queries:
+    print(f"\nQuery: {query}")
+    query_embedding = create_embedding(query)
+    results = collection.query(
+        query_embeddings=[query_embedding],
+        n_results=2,
+        include=["documents", "distances", "metadatas"]
+    )
+    for i, (doc, distance, metadata) in enumerate(zip(
+        results['documents'][0], results['distances'][0], results['metadatas'][0]
+    )):
+        similarity = 1 - (distance / 2)
+        print(f"\nResult {i+1}:")
+        print(f"Text: {doc.strip()}")
+        print(f"Similarity Score: {similarity:.2f}")
+        print(f"Source: {metadata['source']}, Page: {metadata['page']}")
 
-# print("\nTest completed!")
+print("\nTest completed!")

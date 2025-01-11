@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 import google.generativeai as genai
 import chromadb
 from typing import List
+import re
 
 # Load environment variables
 load_dotenv()
@@ -24,6 +25,12 @@ def count_tokens(text: str, model: genai.GenerativeModel) -> int:
     except Exception as e:
       st.error(f"Error counting tokens: {e}")
       return 0
+
+def sanitize_text(text):
+
+    # Escape single dollar signs that are not part of LaTeX expressions, preserving spacing
+    text = re.sub(r'(?<!\$)(?<!\\)\$(?!\$)', r'\$', text)
+    return text
 
 st.title("Government Scheme Assistance Bot")
 
@@ -57,7 +64,7 @@ with st.sidebar.form(key="feedback_form"):
 
 # Initialize ChromaDB with path to local database
 chroma_client = chromadb.PersistentClient(path="./chroma_db")
-collection = chroma_client.get_collection("test_collection")
+collection = chroma_client.get_collection("budgetinfo")
 
 # Configure Gemini API using key from .env
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
@@ -96,7 +103,7 @@ for message in st.session_state.messages:
         st.markdown(message["content"])
 
 # Chat input
-if prompt := st.chat_input("What is up?"):
+if prompt := st.chat_input("Type something"):
     # Add user message to chat
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
@@ -109,21 +116,39 @@ if prompt := st.chat_input("What is up?"):
         # Query ChromaDB using the embedding
         results = collection.query(
             query_embeddings=[query_embedding],
-            n_results=5  # Get top 5 most relevant documents
+            n_results=60,  # Get top 5 most relevant documents
+            include=["documents","metadatas"]
         )
         
         # Prepare context from retrieved documents
         context_docs = results['documents'][0]  # List of retrieved document texts
+        context_metadata = results['metadatas'][0]  # list of retrieved metadatas
         
         # Create enhanced prompt with context
-        enhanced_prompt = f"""Based on the following context and the user's question, provide a relevant answer.
+        enhanced_prompt = f"""You are a helpful and informative assistant chatbot designed to provide citizens with information about government schemes. Your goal is to provide clear, accurate, and well-formatted information based on the documents provided.
 
-Context from documents:
-{' '.join(context_docs)}
+        Context from various sources about government schemes:
+        {' '.join(context_docs)}
 
-User's question: {prompt}
+        User's question: {prompt}
 
-Please provide a response that incorporates relevant information from the context."""
+        Instructions:
+        1. Base your response ONLY on the provided context from the documents. Avoid introducing external knowledge or assumptions.
+        2. Provide a clear and concise answer that is easy to understand for the average citizen. Do not include italicized words, bold text, or any special formatting unless explicitly required by the user. The output text should contain only standard text characters.
+        3. If the provided context does not fully answer the question, state that you do not have enough information to answer from the provided sources and that the user may need to consult the original source documents, or official authorities. Do not provide a speculative answer.
+        4. When applicable, include specific details like dates, amounts, or specific scheme names from the context to be most accurate. Ensure that numerical ranges are formatted correctly with spaces (e.g., "200 to 400"), and there is a space after any number and before any word. Remove any extraneous text, such as the names of schemes or documents, that may be next to each requirement if they do not add clarity.
+        5. Avoid carrying over formatting from source documents that may include italics, bold text, or other stylistic choices unless they are necessary for clarity.
+        6. If the provided context has multiple options that may answer the question, provide all options, and explain all of them clearly.
+        7. If the information from the context may be confusing or has multiple meanings, explain each option clearly, without making a specific assumption.
+        8. Do not generate or include information not found in the provided document.
+        9. Prioritize clarity and accuracy in your responses. If there are discrepancies or outdated information from blog posts or less reliable sources, prioritize information aligned with official government documents when available.
+        10. Structure your response with clear newlines to separate sentences and paragraphs for readability.
+        11. Use bullet points for lists to make information easy to digest.
+        12. Use headers where necessary to organize information effectively and enhance reader understanding.
+        13. Sanitize the output to ensure that text is clean and consistent, avoiding any carryover of special formatting or symbols from source documents, and that text is spaced correctly with numbers.
+        14. if u receive text like 200to400, add spacing between them and replace the italic characters with normal ones.
+        15. The response should only have standard text characters, no html characters or special characters.
+        """
         
          # Count input tokens using the enhanced prompt
         input_tokens = count_tokens(enhanced_prompt, st.session_state.model)
@@ -131,21 +156,38 @@ Please provide a response that incorporates relevant information from the contex
         
         # Generate Gemini response with context
         with st.chat_message("assistant"):
-            # Show retrieved documents in expander (for debugging)
-            with st.expander("Retrieved Documents"):
-                for i, doc in enumerate(context_docs, 1):
-                    st.write(f"Document {i}:", doc)
-            
+            # # Show retrieved documents in expander (for debugging)
+            # with st.expander("Retrieved Documents"):
+            #   for i, (doc, metadata) in enumerate(zip(context_docs, context_metadata), 1):
+            #       sanitized_doc = sanitize_text(doc)
+            #       st.write(f"Document {i} (Source: {metadata['source']}):", sanitized_doc)
+
             # Get response from Gemini
             response = st.session_state.chat_session.send_message(enhanced_prompt)
-            st.markdown(response.text)
+
+            # Debug: Show the raw response text before sanitation
+            # with st.expander("Raw Assistant Response (Before Sanitation)"):
+            #     st.text(response.text)
+            
+            # # Debug: Show the raw response text as unicode escape
+            # with st.expander("Raw Assistant Response (Before Sanitation) - Unicode Escape"):
+            #     st.text(response.text.encode('unicode_escape').decode('utf-8'))
+            
+            sanitized_response_text = sanitize_text(response.text)
+            
+            #Debug: Show the sanitized text after sanitation
+            # with st.expander("Sanitized Assistant Response (After Sanitation)"):
+            #     st.text(sanitized_response_text)
+            
+            
+            st.markdown(sanitized_response_text)
             
             # Count response tokens
             output_tokens = count_tokens(response.text, st.session_state.model)
             st.session_state.total_output_tokens += output_tokens
         
         # Add assistant response to chat history
-        st.session_state.messages.append({"role": "assistant", "content": response.text})
+        st.session_state.messages.append({"role": "assistant", "content": sanitized_response_text})
         
     except Exception as e:
         st.error(f"An error occurred: {str(e)}")
