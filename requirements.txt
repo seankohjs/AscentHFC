@@ -1,6 +1,7 @@
-google-generativeai
-python-dotenv
 streamlit
+python-dotenv
+google-generativeai
 chromadb
 langchain
 pypdf
+typing-extensions

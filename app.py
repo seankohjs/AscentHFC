@@ -130,15 +130,15 @@ if prompt := st.chat_input("Type something"):
         # Create enhanced prompt with context
         enhanced_prompt = f"""You are a helpful and informative assistant chatbot designed to provide citizens with information about government schemes. Your goal is to provide clear, accurate, and well-formatted information based on the documents provided.
 
-        Context from various sources about government schemes:
+        Context from Budget 2024 documents about government schemes:
         {' '.join(context_docs)}
 
         User's question: {prompt}
 
         Instructions:
-        1. Base your response ONLY on the provided context from the documents. Avoid introducing external knowledge or assumptions.
+        1. Base your response ONLY on the provided context from the Budget 2024 documents. Avoid introducing external knowledge or assumptions.
         2. Provide a clear and concise answer that is easy to understand for the average citizen. Do not include italicized words, bold text, or any special formatting unless explicitly required by the user. The output text should contain only standard text characters.
-        3. If the provided context does not fully answer the question, or if the user's question is ambiguous, state that you do not have enough information to answer from the provided sources and that the user may need to consult the original source documents, or official authorities, or ask additional clarifying questions. Then, **ask a specific clarifying question** to help you better understand the user's needs.
+        3. If the provided context from the Budget 2024 documents does not fully answer the question, or if the user's question is ambiguous, state that you do not have enough information to answer specifically from the Budget 2024 documents, and that the user may need to consult official authorities, or ask additional clarifying questions. Then, **ask a specific clarifying question** to help you better understand the user's needs.
         4. When applicable, include specific details like dates, amounts, or specific scheme names from the context to be most accurate. Ensure that numerical ranges are formatted correctly with spaces (e.g., "200 to 400"), and there is a space after any number and before any word. Remove any extraneous text, such as the names of schemes or documents, that may be next to each requirement if they do not add clarity.
         5. Avoid carrying over formatting from source documents that may include italics, bold text, or other stylistic choices unless they are necessary for clarity.
         6. If the provided context has multiple options that may answer the question, provide all options, and explain all of them clearly.
@@ -150,7 +150,7 @@ if prompt := st.chat_input("Type something"):
         12. Use headers where necessary to organize information effectively and enhance reader understanding.
         13. Sanitize the output to ensure that text is clean and consistent, avoiding any carryover of special formatting or symbols from source documents, and that text is spaced correctly with numbers.
         14. The response should only have standard text characters, no html characters or special characters.
-        15. If you do not have enough information to provide an answer, ask a clarifying question so that the user can be more specific to give you enough information to answer their question.
+        15. If you do not have enough information to provide an answer specifically from the Budget 2024 documents, ask a clarifying question so that the user can be more specific to give you enough information to answer their question.
         """
         
          # Count input tokens using the enhanced prompt
