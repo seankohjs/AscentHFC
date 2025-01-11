@@ -1,32 +1,126 @@
-```markdown
-# Gemini Chatbot - Quick Start
+# KiasuKaki - Government Scheme Chatbot and Feedback Analyzer
 
-This chatbot uses Google's Gemini model.  Here's how to run it:
+## Project Description
 
-**1. Setup:**
+KiasuKaki is a chatbot application developed in response to the hackathon challenge: _How can we leverage Generative AI to enhance or propose new government initiatives and services in smart cities?_ Our solution harnesses the power of Generative AI through Google's Gemini API to improve access to and understanding of government information for citizens within a smart city context. We aim to enhance existing services by providing a conversational interface to complex information, alongside a tool for feedback analysis to further shape future initiatives.
 
-* **API Key:**  Get your Gemini API key and put it in a `.env` file like this:
+This project addresses the challenge of information accessibility in smart cities, where complex government documents and initiatives can be overwhelming for citizens. By combining natural language processing with efficient document retrieval and analysis, KiasuKaki allows users to easily obtain clear and concise answers to their questions, promoting a more informed and engaged populace. Furthermore, the included feedback analysis tool enables city administrators to use real-time feedback to improve current services, which enhances government efficiency and responsiveness.
 
-```
-GEMINI_API_KEY=YOUR_ACTUAL_API_KEY
-```
+## Setup Instructions
 
-* **Install:**  Make sure you have Python 3.9+ and install the dependencies:
+To get the KiasuKaki project up and running, follow these steps:
 
-```bash
-pip install -r requirements.txt
-```
+1.  **Clone the Repository:**
 
-**2. Run:**
+    ```bash
+    git clone <your-repo-url>
+    cd <your-repo-directory>
+    ```
 
-```bash
-streamlit run app.py
-```
+2.  **Create a Virtual Environment (Recommended):**
+    It's highly recommended to create a virtual environment to avoid conflicts with other Python projects.
 
-Open the URL shown in your terminal (usually `http://localhost:8501`).
+    ```bash
+    python -m venv venv
+    ```
 
+    Activate the virtual environment:
 
-**3. Chat:**  Type in the input box and press Enter.
+    - **On Windows:**
 
+      ```bash
+      venv\Scripts\activate
+      ```
 
+    - **On macOS and Linux:**
 
+      ```bash
+      source venv/bin/activate
+      ```
+
+3.  **Install Dependencies:**
+    Make sure you have Python 3.7+ installed. Then, install the required packages using pip:
+
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+4.  **Set up Environment Variables:**
+
+    - Create a `.env` file in the root of the project directory.
+    - Add your Google Gemini API key to the `.env` file:
+      ```
+      GEMINI_API_KEY=YOUR_GEMINI_API_KEY
+      ```
+
+5.  **Download sample PDF documents:**
+
+    - Create a `documents` directory in the root of your repository
+    - Add pdfs to this directory that you would like to use the chatbot with.
+
+6.  **Run the preprocessing script:**
+
+- Ensure that the `documents` directory contains the relevant pdf documents
+
+  ```bash
+  python preprocessing.py
+  ```
+
+  This step preprocesses your PDF documents, chunks them into smaller pieces, creates embeddings using the Gemini API, and stores them into a ChromaDB database.
+
+7.  **Run the Chatbot Application:**
+
+    ```bash
+    streamlit run app.py
+    ```
+
+    This command starts the Streamlit application, and you can access it in your browser.
+
+8.  **Run the Feedback Analysis Tool:**
+    ```bash
+     streamlit run feedback.py
+    ```
+    This command starts the Streamlit feedback analysis tool, you can access it in your browser.
+
+## Usage Guide
+
+### Chatbot Application (app.py):
+
+1.  **Access the Application:** Open your web browser and go to the URL provided by Streamlit after running the `streamlit run app.py` command (usually `http://localhost:8501`).
+2.  **Ask Questions:** Type your questions about government schemes in the chat input box at the bottom of the page.
+3.  **Read Responses:** The chatbot will respond with relevant information based on the documents provided.
+4.  **Provide Feedback:** Use the sidebar to submit feedback on the chatbot's performance or the schemes in general.
+5.  **End Chat Session:** You can end the current chat session with the button in the sidebar, this will clear the session and the history, as well as the token counts.
+
+### Feedback Analysis Tool (feedback.py):
+
+1. **Access the Tool:** Open your web browser and go to the URL provided by Streamlit after running `streamlit run feedback.py` (usually `http://localhost:8501`).
+2. **View Raw Feedback:** Expand the "View Raw Feedback" section to see the feedback that users have submitted through the chatbot.
+3. **Ask Questions:** Type your specific questions related to feedback analysis in the chat input box.
+4. **Receive Analysis:** The chatbot will respond based on the data available, you can ask questions like the average rating, or for a summarization of the feedback given
+5. **End Chat Session:** You can end the current chat session with the button in the sidebar, this will clear the session and the history.
+
+### Example Queries:
+
+- **Chatbot:** "What are the eligibility criteria for the cost of living special payment?"
+- **Chatbot:** "How much will I get if I am eligible for the special payment?"
+- **Feedback:** "How many users gave a rating of 4 or higher?"
+- **Feedback:** "List and explain the positive feedback that was given"
+
+## Contributors
+
+- Koh Jun Sheng
+- Matthew Lim Wei Li
+- Tan Ben Kiat
+- Keith Ng Jun Hao
+- Keith Ng Jun Heng
+
+## Additional Notes
+
+- **Limitations:**
+  - The chatbot's responses are limited by the information present in the provided documents. It cannot answer questions outside of that context.
+  - The feedback analysis tool requires the `policy_feedback.txt` file to contain valid feedback in the right format.
+- **Future Improvements:**
+  - Add support for multiple document types beyond PDFs.
+  - Implement user authentication.
+  - Improve the chatbot's response formatting and contextual understanding using advanced Gemini techniques.
