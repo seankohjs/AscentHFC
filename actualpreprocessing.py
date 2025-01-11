@@ -16,7 +16,7 @@ genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 client = chromadb.PersistentClient(path="./chroma_db")
 
 # Create or get collection
-collection_name = "test_collection"
+collection_name = "budgetinfo"  
 collection = client.get_or_create_collection(name=collection_name)
 
 def create_embedding(text: str) -> List[float]:
@@ -30,55 +30,71 @@ def create_embedding(text: str) -> List[float]:
 def chunk_text(text: str) -> List[str]:
     """Split text into chunks"""
     text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=1000,
-        chunk_overlap=200,
+        chunk_size=2000,
+        chunk_overlap=400,
         separators=["\n\n", "\n", ". ", " ", ""]
     )
     return text_splitter.split_text(text)
 
-# Load PDF
-pdf_path = "./processtest.pdf"  # Replace with your PDF file path
-loader = PyPDFLoader(pdf_path)
-pdf_document = loader.load()
+# Directory containing PDF documents
+documents_folder = "documents"
 
-# Process and add documents from the PDF
-print("Processing PDF...")
-for i, page in enumerate(pdf_document):
-    chunks = chunk_text(page.page_content)
-    for j, chunk in enumerate(chunks):
-        embedding = create_embedding(chunk)
-        collection.add(
-            embeddings=[embedding],
-            documents=[chunk],
-            ids=[f"page_{i}_chunk_{j}"],
-            metadatas=[{"source": f"processtest.pdf", "page": i}]
-        )
+print("Processing PDF documents...")
+for filename in os.listdir(documents_folder):
+    if filename.lower().endswith(".pdf"):
+        pdf_path = os.path.join(documents_folder, filename)
+        print(f"Processing: {filename}...")
+        try:
+            loader = PyPDFLoader(pdf_path)
+            pdf_document = loader.load()
 
-# Test queries (Adapt these to your PDF content)
+            for i, page in enumerate(pdf_document):
+                chunks = chunk_text(page.page_content)
+                for j, chunk in enumerate(chunks):
+                    embedding = create_embedding(chunk)
+                    collection.add(
+                        embeddings=[embedding],
+                        documents=[chunk],
+                        ids=[f"{filename}_page_{i}_chunk_{j}"],
+                        metadatas=[{"source": filename, "page": i}]
+                    )
+            print(f"Finished processing: {filename}")
+        except Exception as e:
+            print(f"Error processing {filename}: {e}")
+
+# Test queries for budget documents
 test_queries = [
-    "What is the main topic of this document?",
-    "Find information about key concepts",
-    "Summarize the findings", # example queries
+    "What are the key budget allocations?",
+    "Summarize the key findings and proposals",
+    "Are there any changes in tax regulations?",
+    "What is the budget for education?",
+    "What is the budget for healthcare?",
+    "What is the budget for social welfare",
+    "Explain the main topics mentioned in the budget",
+    "What initiatives are mentioned in the budget?",
+    "What are the proposed policy changes in the budget?",
+    "What is the total budget?",
+    "What are the economic projections of this budget?"
+
 ]
 
 
-print("\nTesting queries...")
-for query in test_queries:
-    print(f"\nQuery: {query}")
-    query_embedding = create_embedding(query)
-    results = collection.query(
-        query_embeddings=[query_embedding],
-        n_results=2,
-        include=["documents", "distances", "metadatas"]
-    )
-    for i, (doc, distance, metadata) in enumerate(zip(
-        results['documents'][0], results['distances'][0], results['metadatas'][0]
-    )):
-        similarity = 1 - (distance / 2)
-        print(f"\nResult {i+1}:")
-        print(f"Text: {doc.strip()}")
-        print(f"Similarity Score: {similarity:.2f}")
-        print(f"Source: {metadata['source']}, Page: {metadata['page']}")
+# print("\nTesting queries...")
+# for query in test_queries:
+#     print(f"\nQuery: {query}")
+#     query_embedding = create_embedding(query)
+#     results = collection.query(
+#         query_embeddings=[query_embedding],
+#         n_results=2,
+#         include=["documents", "distances", "metadatas"]
+#     )
+#     for i, (doc, distance, metadata) in enumerate(zip(
+#         results['documents'][0], results['distances'][0], results['metadatas'][0]
+#     )):
+#         similarity = 1 - (distance / 2)
+#         print(f"\nResult {i+1}:")
+#         print(f"Text: {doc.strip()}")
+#         print(f"Similarity Score: {similarity:.2f}")
+#         print(f"Source: {metadata['source']}, Page: {metadata['page']}")
 
-
-print("\nTest completed!")
+# print("\nTest completed!")
