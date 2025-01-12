@@ -85,7 +85,7 @@ To get the KiasuKaki project up and running, follow these steps:
 - **Only if you have changed the documents or added new ones**, run the following code
 
   ```
-  python actualpreprocessing.py
+  python preprocessing.py
   ```
 
   This step preprocesses your PDF documents, chunks them into smaller pieces, creates embeddings using the Gemini API, and stores them into a ChromaDB database. Ensure this runs without any errors or warnings.
