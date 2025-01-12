@@ -50,20 +50,18 @@ To get the KiasuKaki project up and running, follow these steps:
 
 3.  **Install Dependencies:**
     Make sure you have Python 3.7+ installed. Then, install the required packages using pip:
-
+    ```bash
+    pip install -r requirements.txt
+    ```
+    If you don't have a `requirements.txt` file, create one in the root of the project directory with the following content:
         ```
-        pip install -r requirements.txt
+        streamlit
+        python-dotenv
+        google-generativeai
+        chromadb
+        langchain
+        pypdf
         ```
-
-        If you don't have a `requirements.txt` file, create one in the root of the project directory with the following content:
-        `streamlit
-
-    python-dotenv
-    google-generativeai
-    chromadb
-    langchain
-    pypdf
-    `
 
 4.  **Set up Environment Variables:**
 
