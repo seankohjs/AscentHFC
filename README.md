@@ -39,17 +39,15 @@ To get the KiasuKaki project up and running, follow these steps:
 
     - **On Windows:**
 
-
-        ```
-        venv\Scripts\activate
-        ```
+      ```
+      venv\Scripts\activate
+      ```
 
     - **On macOS and Linux:**
 
-
-        ```
-        source venv/bin/activate
-        ```
+      ```
+      source venv/bin/activate
+      ```
 
 3.  **Install Dependencies:**
     Make sure you have Python 3.7+ installed. Then, install the required packages using pip:
@@ -60,12 +58,12 @@ To get the KiasuKaki project up and running, follow these steps:
 
     If you don't have a `requirements.txt` file, create one in the root of the project directory with the following content:
     `streamlit
-    python-dotenv
-    google-generativeai
-    chromadb
-    langchain
-    pypdf
-   `
+ python-dotenv
+ google-generativeai
+ chromadb
+ langchain
+ pypdf
+`
 
 4.  **Set up Environment Variables:**
 
@@ -74,7 +72,6 @@ To get the KiasuKaki project up and running, follow these steps:
       ```
       GEMINI_API_KEY=YOUR_GEMINI_API_KEY
       ```
-      **Note:** Do NOT commit this file to the repository!
     - You'll need to obtain a Gemini API key from Google's AI Studio, refer to the Google documentation for more information on how to do this.
 
 5.  **Document Folder:** The `documents` folder contains the current Budget 2024 documents that are fed to ChromaDB.
@@ -83,12 +80,11 @@ To get the KiasuKaki project up and running, follow these steps:
 
 - **Only if you have changed the documents or added new ones**, run the following code
 
+  ```
+  python actualpreprocessing.py
+  ```
 
-    ```
-    python actualpreprocessing.py
-    ```
-
-    This step preprocesses your PDF documents, chunks them into smaller pieces, creates embeddings using the Gemini API, and stores them into a ChromaDB database. Ensure this runs without any errors or warnings.
+  This step preprocesses your PDF documents, chunks them into smaller pieces, creates embeddings using the Gemini API, and stores them into a ChromaDB database. Ensure this runs without any errors or warnings.
 
 7.  **Run the Chatbot Application:**
 
@@ -129,20 +125,6 @@ To get the KiasuKaki project up and running, follow these steps:
 - **Feedback:** "How many users gave a rating of 4 or higher?"
 - **Feedback:** "List and explain the positive feedback that was given"
 
-## Deployment Instructions
-
-This application is currently designed for local use. To deploy it to a wider audience, you could use cloud services like:
-
-- **Streamlit Cloud:** Easily deploy the Streamlit apps with minimal configuration.
-- **Docker:** Create a Docker container to manage dependencies and run the app on any platform.
-- **Cloud platforms:** Deploy the Docker container on platforms like AWS, Google Cloud, or Azure.
-
-Steps for deployment depend on the chosen service. You will need to:
-
-1. Create a `requirements.txt` file if you haven't already, ensure all dependencies for your project are in this file
-2. Commit all your code, including the `requirements.txt` file
-3. Sign up or log into the cloud service of your choice
-4. Follow the service's respective guide on how to deploy the project.
 
 ## Contributors
 
