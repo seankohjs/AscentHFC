@@ -59,7 +59,7 @@ To get the KiasuKaki project up and running, follow these steps:
     ```
 
     If you don't have a `requirements.txt` file, create one in the root of the project directory with the following content:
-    `    streamlit
+    `streamlit
     python-dotenv
     google-generativeai
     chromadb
@@ -77,9 +77,7 @@ To get the KiasuKaki project up and running, follow these steps:
       **Note:** Do NOT commit this file to the repository!
     - You'll need to obtain a Gemini API key from Google's AI Studio, refer to the Google documentation for more information on how to do this.
 
-5.  **Verify Documents:**
-
-    - Ensure that the `documents` directory contains the sample PDF documents, if these documents are sufficient, then there is no need to add more
+5.  **Document Folder:** The `documents` folder contains the current Budget 2024 documents that are fed to ChromaDB.
 
 6.  **Run the preprocessing script (if necessary):**
 
