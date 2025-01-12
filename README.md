@@ -16,7 +16,6 @@ This project addresses the challenge of information accessibility in smart citie
 - **Feedback Analysis Tool:** Provides insights into public sentiment regarding government schemes, enabling data-driven decisions for improvement.
 - **User-Friendly Interface:** Built with Streamlit to offer an accessible and easy-to-use platform for all citizens.
 
-
 ## Setup Instructions
 
 To get the KiasuKaki project up and running, follow these steps:
@@ -52,29 +51,32 @@ To get the KiasuKaki project up and running, follow these steps:
 3.  **Install Dependencies:**
     Make sure you have Python 3.7+ installed. Then, install the required packages using pip:
 
-    ```
-    pip install -r requirements.txt
-    ```
+        ```
+        pip install -r requirements.txt
+        ```
 
-    If you don't have a `requirements.txt` file, create one in the root of the project directory with the following content:
-    `streamlit
- python-dotenv
- google-generativeai
- chromadb
- langchain
- pypdf
-`
+        If you don't have a `requirements.txt` file, create one in the root of the project directory with the following content:
+        `streamlit
+
+    python-dotenv
+    google-generativeai
+    chromadb
+    langchain
+    pypdf
+    `
 
 4.  **Set up Environment Variables:**
 
     - Create a `.env` file in the root of the project directory.
     - Add your Google Gemini API key to the `.env` file:
+
       ```
       GEMINI_API_KEY=YOUR_GEMINI_API_KEY
       ```
-  
+
     - You'll need to obtain a Gemini API key from Google's AI Studio, refer to the Google documentation for more information on how to do this.
-        **Note:** As of 12 Jan 2025, the `gemini-2.0-flash-exp` model is free to use under the Gemini API, so there is no need to pay for usage.
+
+    **Note:** As of 12 Jan 2025, the `gemini-2.0-flash-exp` model is free to use under the Gemini API, so there is no need to pay for usage.
 
 5.  **Document Folder:** The `documents` folder contains the current Budget 2024 documents that are fed to ChromaDB.
 
@@ -126,7 +128,6 @@ To get the KiasuKaki project up and running, follow these steps:
 - **Chatbot:** "How much will I get if I am eligible for the special payment?"
 - **Feedback:** "How many users gave a rating of 4 or higher?"
 - **Feedback:** "List and explain the positive feedback that was given"
-
 
 ## Contributors
 
