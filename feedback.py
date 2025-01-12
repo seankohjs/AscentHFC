@@ -69,25 +69,28 @@ if "chat_session" not in st.session_state:
 if "messages" not in st.session_state:
     st.session_state.messages = []
     
+# Load feedback data only once and store in session state
+if "feedback_data" not in st.session_state:
+    feedback_file_path = "policy_feedback.txt"
+    st.session_state.feedback_data = load_feedback_data(feedback_file_path)
 
-# Load feedback data
-feedback_file_path = "policy_feedback.txt"
-feedback_data = load_feedback_data(feedback_file_path)
-
+# Set a flag for whether the first feedback prompt has been sent
+if "first_prompt_sent" not in st.session_state:
+    st.session_state.first_prompt_sent = False
+    
 # Display raw feedback data
 with st.expander("View Raw Feedback"):
-    if feedback_data:
-        for line in feedback_data:
+    if st.session_state.feedback_data:
+        for line in st.session_state.feedback_data:
             st.write(line)
     else:
         st.write("No feedback data found")
-
+        
 
 # Display chat messages
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
-
 
 # Chat input
 if prompt := st.chat_input("Enter your query here"):
@@ -97,34 +100,51 @@ if prompt := st.chat_input("Enter your query here"):
         st.markdown(prompt)
     
     try:
-        if feedback_data:
-            # Join all feedback into a single string for context
-            feedback_context = "\n".join(feedback_data)
+        if st.session_state.feedback_data:
+           # Join all feedback into a single string for context
+            feedback_context = "\n".join(st.session_state.feedback_data)
             
-            enhanced_prompt = f"""You are a helpful assistant designed to analyze government policy feedback. Use the following feedback to answer the questions given.
-            Feedback:
-            {feedback_context}
+            if not st.session_state.first_prompt_sent:
+               enhanced_prompt = f"""You are a helpful assistant designed to analyze government policy feedback. Use the following feedback to answer the questions given. You should remember this feedback in future conversations.
+                Feedback:
+                {feedback_context}
+                
+                Instructions:
+                1. Analyze the given feedback to answer the specific questions given. 
+                2. If a rating has been provided, make note of it. 
+                3. Give an overview of the overall rating provided if applicable.
+                4. If the user asks to list items, list them and explain each item if necessary.
+                5. Structure your response with clear newlines to separate sentences and paragraphs for readability.
+                6. Use bullet points for lists to make information easy to digest.
+                7. Use headers where necessary to organize information effectively and enhance reader understanding.
+
+                User's question: {prompt}
+                 """
+               st.session_state.first_prompt_sent = True
             
-            Instructions:
-            1. Analyze the given feedback to answer the specific questions given. 
-            2. If a rating has been provided, make note of it. 
-            3. Give an overview of the overall rating provided if applicable.
-            4. If the user asks to list items, list them and explain each item if necessary.
-            5. Structure your response with clear newlines to separate sentences and paragraphs for readability.
-            6. Use bullet points for lists to make information easy to digest.
-            7. Use headers where necessary to organize information effectively and enhance reader understanding.
-             """
-            
-             # Count input tokens using the enhanced prompt
-            input_tokens = count_tokens(enhanced_prompt + prompt, st.session_state.model)
+            else:
+                enhanced_prompt = f"""You are a helpful assistant designed to analyze government policy feedback. You should use the feedback given earlier to answer the following questions.
+
+                Instructions:
+                1. Analyze the feedback to answer the specific questions given. 
+                2. If a rating has been provided, make note of it. 
+                3. Give an overview of the overall rating provided if applicable.
+                4. If the user asks to list items, list them and explain each item if necessary.
+                5. Structure your response with clear newlines to separate sentences and paragraphs for readability.
+                6. Use bullet points for lists to make information easy to digest.
+                7. Use headers where necessary to organize information effectively and enhance reader understanding.
+
+                User's question: {prompt}
+                 """
+                 
+            # Count input tokens using the enhanced prompt
+            input_tokens = count_tokens(enhanced_prompt, st.session_state.model)
             
             # Generate Gemini response with context
             with st.chat_message("assistant"):
-                response = st.session_state.chat_session.send_message(enhanced_prompt + prompt)
+                response = st.session_state.chat_session.send_message(enhanced_prompt)
                 sanitized_response_text = sanitize_text(response.text)
                 st.markdown(sanitized_response_text)
-                
-
             
             # Add assistant response to chat history
             st.session_state.messages.append({"role": "assistant", "content": sanitized_response_text})
@@ -141,4 +161,5 @@ if len(st.session_state.messages) > 0:
     if st.sidebar.button("End Chat"):
         st.session_state.messages = []  # Clear chat history
         st.session_state.chat_session = st.session_state.model.start_chat(history=[])  # Reset chat session
+        st.session_state.first_prompt_sent = False #reset the first prompt
         st.rerun()

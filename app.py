@@ -184,7 +184,7 @@ if len(st.session_state.messages) > 0:
         st.session_state.chat_session = st.session_state.model.start_chat(history=[])  # Reset chat session
         st.session_state.total_input_tokens = 0
         st.session_state.total_output_tokens = 0
-        st.rerun() # plan to change this to ask for feedback
+        st.rerun() 
 
 # # Display token counts in sidebar (For debugging purposes)
 # st.sidebar.markdown("---")
