@@ -72,7 +72,9 @@ To get the KiasuKaki project up and running, follow these steps:
       ```
       GEMINI_API_KEY=YOUR_GEMINI_API_KEY
       ```
+  
     - You'll need to obtain a Gemini API key from Google's AI Studio, refer to the Google documentation for more information on how to do this.
+        **Note:** As of 12 Jan 2025, the `gemini-2.0-flash-exp` model is free to use under the Gemini API, so there is no need to pay for usage.
 
 5.  **Document Folder:** The `documents` folder contains the current Budget 2024 documents that are fed to ChromaDB.
 
