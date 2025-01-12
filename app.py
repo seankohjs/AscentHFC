@@ -64,14 +64,7 @@ with st.sidebar.form(key="policy_feedback_form", clear_on_submit=True):
             # Save feedback to a file (append mode)
             with open("policy_feedback.txt", "a") as f:
                 f.write(f"Feedback: {feedback}\nRating: {rating}\n\n")  # Append feedback with a separator
-            
-            # Display success message temporarily
-            success_message = st.sidebar.empty()
-            success_message.success("Thank you for your feedback! It's very valuable.")
-            
-            # Wait for 3 seconds before clearing the message
-            time.sleep(3)
-            success_message.empty()  # Clear the message
+            st.sidebar.success("Thank you for your feedback! It's very valuable.")
         else:
             st.sidebar.warning("Please provide some feedback before submitting.")
 
