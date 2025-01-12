@@ -123,8 +123,7 @@ if prompt := st.chat_input("Enter your query here"):
                 response = st.session_state.chat_session.send_message(enhanced_prompt + prompt)
                 sanitized_response_text = sanitize_text(response.text)
                 st.markdown(sanitized_response_text)
-                output_tokens = count_tokens(response.text, st.session_state.model)
-                st.write(f"Total Tokens: {input_tokens + output_tokens}")
+                
 
             
             # Add assistant response to chat history
