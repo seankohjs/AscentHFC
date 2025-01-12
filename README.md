@@ -112,7 +112,7 @@ To get the KiasuKaki project up and running, follow these steps:
 2.  **Ask Questions:** Type your questions about government schemes in the chat input box at the bottom of the page.
 3.  **Read Responses:** The chatbot will respond with relevant information based on the documents provided.
 4.  **Provide Feedback:** Use the sidebar to submit feedback on the chatbot's performance or the schemes in general.
-5.  **End Chat Session:** You can end the current chat session with the button in the sidebar, this will clear the session and the history, as well as the token counts.
+5.  **End Chat Session:** You can end the current chat session with the button in the sidebar, this will clear the session and the history.
 
 ### Feedback Analysis Tool (feedback.py):
 
