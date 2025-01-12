@@ -15,7 +15,7 @@ This project addresses the challenge of information accessibility in smart citie
 - **Document Customisation:** Users are free to replace or add to the existing documents in the `documents` folder with updated ones (e.g., Budget 2025). Preprocessing is only required when new documents are added or existing documents are updated.
 - **Feedback Analysis Tool:** Provides insights into public sentiment regarding government schemes, enabling data-driven decisions for improvement.
 - **User-Friendly Interface:** Built with Streamlit to offer an accessible and easy-to-use platform for all citizens.
-- **Token Tracking:** Tracks total input and output tokens for better control.
+
 
 ## Setup Instructions
 
