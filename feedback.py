@@ -4,12 +4,12 @@ from dotenv import load_dotenv
 import google.generativeai as genai
 import re
 from typing import List
-from functions import count_tokens, sanitize_text, load_feedback_data
+from functions import count_tokens, sanitize_text, load_feedback_data ,load_files_in_date_range
+from datetime import date, timedelta
 
 
 # Load environment variables
 load_dotenv(dotenv_path="config/.env")
-
 
 st.title("Policy Feedback Analysis Chatbot")
 
@@ -21,17 +21,15 @@ You can interact with the chatbot to ask specific questions or request analysis
 of the feedback data.
 """)
 
-# Get list of available text files in data and chatHistory
-data_dir = "data"
-chat_history_dir = "data/chatHistory"
-available_files = ["policy_feedback.txt"]
-if os.path.exists(chat_history_dir):
-    available_files.extend(
-      [f"chatHistory/{f}" for f in os.listdir(chat_history_dir) if f.endswith(".txt")]
-    )
+# Data source selection
+st.sidebar.header("Select Data Source")
+data_source = st.sidebar.selectbox("Select Data Source", ["Chat History", "Policy Feedback"])
 
-# File selection dropdown
-selected_file = st.sidebar.selectbox("Select a file to analyze:", available_files)
+# Date range selection (only if analyzing chat history)
+if data_source == "Chat History":
+    st.sidebar.header("Select Date Range")
+    start_date = st.sidebar.date_input("Start Date", date.today() - timedelta(days=7))
+    end_date = st.sidebar.date_input("End Date", date.today())
 
 
 # Configure Gemini API using key from .env
@@ -58,20 +56,28 @@ if "chat_session" not in st.session_state:
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
-    
-# Load feedback data based on the selected file
-if "feedback_data" not in st.session_state or st.session_state.get("selected_file", None) != selected_file:
-    st.session_state.selected_file = selected_file
-    feedback_file_path = os.path.join(data_dir, selected_file)
-    if selected_file.startswith("chatHistory/"):
-        feedback_file_path = os.path.join(data_dir, selected_file)
-    st.session_state.feedback_data = load_feedback_data(feedback_file_path)
 
+
+
+
+# Load feedback data based on the selected data source and date range
+if "feedback_data" not in st.session_state or st.session_state.get("selected_options", None) != (data_source, start_date if data_source == "Chat History" else None, end_date if data_source == "Chat History" else None):
+    st.session_state.selected_options = (data_source, start_date if data_source == "Chat History" else None, end_date if data_source == "Chat History" else None)
+    all_feedback_data = []
+    if data_source == "Chat History":
+        selected_files = load_files_in_date_range(start_date, end_date)
+        for selected_file in selected_files:
+            feedback_file_path = os.path.join("data", selected_file)
+            all_feedback_data.extend(load_feedback_data(feedback_file_path))
+    elif data_source == "Policy Feedback":
+       feedback_file_path = os.path.join("data", "policy_feedback.txt")
+       all_feedback_data = load_feedback_data(feedback_file_path)
+    st.session_state.feedback_data = all_feedback_data
 
 # Set a flag for whether the first feedback prompt has been sent
 if "first_prompt_sent" not in st.session_state:
     st.session_state.first_prompt_sent = False
-    
+
 # Display raw feedback data
 with st.expander("View Raw Feedback"):
     if st.session_state.feedback_data:
@@ -79,7 +85,6 @@ with st.expander("View Raw Feedback"):
             st.write(line)
     else:
         st.write("No feedback data found")
-        
 
 # Display chat messages
 for message in st.session_state.messages:
@@ -92,68 +97,68 @@ if prompt := st.chat_input("Enter your query here"):
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
-    
+
     try:
         if st.session_state.feedback_data:
-           # Join all feedback into a single string for context
+            # Join all feedback into a single string for context
             feedback_context = "\n".join(st.session_state.feedback_data)
-            
-            if not st.session_state.first_prompt_sent:
-               enhanced_prompt = f"""You are a helpful assistant designed to analyze government policy feedback. Use the following feedback to answer the questions given. You should remember this feedback in future conversations.
-                Feedback:
-                {feedback_context}
-                
-                Instructions:
-                1. Analyze the given feedback to answer the specific questions given. 
-                2. If a rating has been provided, make note of it. 
-                3. Give an overview of the overall rating provided if applicable.
-                4. If the user asks to list items, list them and explain each item if necessary.
-                5. Structure your response with clear newlines to separate sentences and paragraphs for readability.
-                6. Use bullet points for lists to make information easy to digest.
-                7. Use headers where necessary to organize information effectively and enhance reader understanding.
 
-                User's question: {prompt}
-                 """
-               st.session_state.first_prompt_sent = True
-            
+            if not st.session_state.first_prompt_sent:
+                enhanced_prompt = f"""You are a helpful assistant designed to analyze government policy feedback. Use the following feedback to answer the questions given. You should remember this feedback in future conversations.
+                 Feedback:
+                 {feedback_context}
+                 
+                 Instructions:
+                 1. Analyze the given feedback to answer the specific questions given. 
+                 2. If a rating has been provided, make note of it. 
+                 3. Give an overview of the overall rating provided if applicable.
+                 4. If the user asks to list items, list them and explain each item if necessary.
+                 5. Structure your response with clear newlines to separate sentences and paragraphs for readability.
+                 6. Use bullet points for lists to make information easy to digest.
+                 7. Use headers where necessary to organize information effectively and enhance reader understanding.
+
+                 User's question: {prompt}
+                  """
+                st.session_state.first_prompt_sent = True
+
             else:
                 enhanced_prompt = f"""You are a helpful assistant designed to analyze government policy feedback. You should use the feedback given earlier to answer the following questions.
 
-                Instructions:
-                1. Analyze the feedback to answer the specific questions given. 
-                2. If a rating has been provided, make note of it. 
-                3. Give an overview of the overall rating provided if applicable.
-                4. If the user asks to list items, list them and explain each item if necessary.
-                5. Structure your response with clear newlines to separate sentences and paragraphs for readability.
-                6. Use bullet points for lists to make information easy to digest.
-                7. Use headers where necessary to organize information effectively and enhance reader understanding.
+                 Instructions:
+                 1. Analyze the feedback to answer the specific questions given. 
+                 2. If a rating has been provided, make note of it. 
+                 3. Give an overview of the overall rating provided if applicable.
+                 4. If the user asks to list items, list them and explain each item if necessary.
+                 5. Structure your response with clear newlines to separate sentences and paragraphs for readability.
+                 6. Use bullet points for lists to make information easy to digest.
+                 7. Use headers where necessary to organize information effectively and enhance reader understanding.
 
-                User's question: {prompt}
-                 """
-                 
+                 User's question: {prompt}
+                  """
+
             # Count input tokens using the enhanced prompt
             input_tokens = count_tokens(enhanced_prompt, st.session_state.model)
-            
+
             # Generate Gemini response with context
             with st.chat_message("assistant"):
                 response = st.session_state.chat_session.send_message(enhanced_prompt)
                 sanitized_response_text = sanitize_text(response.text)
                 st.markdown(sanitized_response_text)
-            
+
             # Add assistant response to chat history
             st.session_state.messages.append({"role": "assistant", "content": sanitized_response_text})
-                
+
         else:
             st.warning("No feedback data found, please try again after the user has provided feedback.")
 
     except Exception as e:
         st.error(f"An error occurred: {str(e)}")
-        
+
 
 # Conditionally display the "End Chat" button in the sidebar
 if len(st.session_state.messages) > 0:
     if st.sidebar.button("End Chat"):
         st.session_state.messages = []  # Clear chat history
         st.session_state.chat_session = st.session_state.model.start_chat(history=[])  # Reset chat session
-        st.session_state.first_prompt_sent = False #reset the first prompt
+        st.session_state.first_prompt_sent = False  # reset the first prompt
         st.rerun()

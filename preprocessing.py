@@ -5,7 +5,7 @@ from typing import List
 from dotenv import load_dotenv
 from functions import create_embedding, chunk_text, clean_text
 import re
-from langchain.document_loaders import PyPDFLoader
+from langchain_community.document_loaders import PyPDFLoader
 
 # Load environment variables
 load_dotenv(dotenv_path="config/.env")

@@ -5,7 +5,7 @@ from typing import List
 from datetime import date, datetime
 import streamlit as st
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.document_loaders import PyPDFLoader
+from langchain_community.document_loaders import PyPDFLoader
 
 
 def create_embedding(text: str) -> List[float]:
@@ -83,3 +83,21 @@ def load_feedback_data(file_path: str) -> List[str]:
     except FileNotFoundError:
         st.error(f"File not found: {file_path}")
         return []
+    
+# Function to load files within the selected date range
+def load_files_in_date_range(start_date, end_date):
+    data_dir = "data"
+    chat_history_dir = "data/chatHistory"
+    feedback_files = []
+    
+    if os.path.exists(chat_history_dir):
+      for filename in os.listdir(chat_history_dir):
+          if filename.endswith(".txt"):
+              try:
+                  file_date = date.fromisoformat(filename.replace(".txt", ""))  # assumes file format YYYY-MM-DD
+                  if start_date <= file_date <= end_date:
+                      feedback_files.append(f"chatHistory/{filename}")
+              except ValueError:
+                  continue  # skip if filename doesn't match date format
+
+    return feedback_files
