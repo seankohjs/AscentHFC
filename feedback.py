@@ -16,9 +16,15 @@ st.title("Policy Feedback Analysis Chatbot")
 # Sidebar with app explanation
 st.sidebar.title("How to Use This Chatbot")
 st.sidebar.write("""
-This chatbot is designed to help analyze feedback about government policies and schemes.
-You can interact with the chatbot to ask specific questions or request analysis
-of the feedback data.
+This chatbot is designed to analyze user feedback on government policies and schemes. 
+You can select the source of feedback data—either from chat history logs within a specified date range or directly from a policy feedback file.
+
+Use the chatbot to ask questions or request analysis about the feedback data. You can inquire about:
+
+- Overall sentiment or ratings given.
+- Specific concerns or positive comments.
+- Summaries of feedback across a particular date range (if using chat history).
+- Patterns or trends in the collected feedback.
 """)
 
 # Data source selection
