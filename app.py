@@ -7,9 +7,9 @@ from typing import List
 import re
 import time
 from functions import create_embedding, count_tokens, sanitize_text, save_chat_history
-   
+
 # Load environment variables
-load_dotenv()
+load_dotenv(dotenv_path="config/.env")
 
 st.title("KiasuKaki")
 
@@ -45,14 +45,14 @@ with st.sidebar.form(key="policy_feedback_form", clear_on_submit=True):
     if submit_feedback:
         if feedback:  # Check if feedback is not empty
             # Save feedback to a file (append mode)
-            with open("policy_feedback.txt", "a") as f:
+            with open("data/policy_feedback.txt", "a") as f:
                 f.write(f"Feedback: {feedback}\nRating: {rating}\n\n")  # Append feedback with a separator
             st.sidebar.success("Thank you for your feedback! It's very valuable.")
         else:
             st.sidebar.warning("Please provide some feedback before submitting.")
 
 # Initialize ChromaDB with path to local database
-chroma_client = chromadb.PersistentClient(path="./chroma_db")
+chroma_client = chromadb.PersistentClient(path="chroma_db")
 collection = chroma_client.get_collection("budgetinfo")
 
 # Configure Gemini API using key from .env

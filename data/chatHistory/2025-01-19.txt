@@ -91,3 +91,22 @@ Could you please specify what you would like to know about government schemes? F
 
 ----------------------------------------
 
+Session started at: 2025-01-19 22:48:44
+----------------------------------------
+
+user: hi bot
+
+assistant: Hello! I am a chatbot designed to provide information about government schemes based on the Budget 2024 documents.
+
+I can provide information about various schemes and initiatives, including:
+
+*   Support for households
+*   Support for businesses
+*   Skills and training programs
+*   Investments in technology and innovation
+
+To help me better answer your questions, could you please specify what type of information you are looking for? For example, are you interested in schemes for individuals, businesses, or a specific sector?
+
+
+----------------------------------------
+

@@ -8,7 +8,7 @@ from functions import count_tokens, sanitize_text, load_feedback_data
 
 
 # Load environment variables
-load_dotenv()
+load_dotenv(dotenv_path="config/.env")
 
 
 st.title("Policy Feedback Analysis Chatbot")
@@ -20,6 +20,19 @@ This chatbot is designed to help analyze feedback about government policies and 
 You can interact with the chatbot to ask specific questions or request analysis
 of the feedback data.
 """)
+
+# Get list of available text files in data and chatHistory
+data_dir = "data"
+chat_history_dir = "data/chatHistory"
+available_files = ["policy_feedback.txt"]
+if os.path.exists(chat_history_dir):
+    available_files.extend(
+      [f"chatHistory/{f}" for f in os.listdir(chat_history_dir) if f.endswith(".txt")]
+    )
+
+# File selection dropdown
+selected_file = st.sidebar.selectbox("Select a file to analyze:", available_files)
+
 
 # Configure Gemini API using key from .env
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
@@ -46,10 +59,14 @@ if "chat_session" not in st.session_state:
 if "messages" not in st.session_state:
     st.session_state.messages = []
     
-# Load feedback data only once and store in session state
-if "feedback_data" not in st.session_state:
-    feedback_file_path = "policy_feedback.txt"
+# Load feedback data based on the selected file
+if "feedback_data" not in st.session_state or st.session_state.get("selected_file", None) != selected_file:
+    st.session_state.selected_file = selected_file
+    feedback_file_path = os.path.join(data_dir, selected_file)
+    if selected_file.startswith("chatHistory/"):
+        feedback_file_path = os.path.join(data_dir, selected_file)
     st.session_state.feedback_data = load_feedback_data(feedback_file_path)
+
 
 # Set a flag for whether the first feedback prompt has been sent
 if "first_prompt_sent" not in st.session_state:

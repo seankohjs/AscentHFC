@@ -33,8 +33,8 @@ def sanitize_text(text):
 
 def save_chat_history(user_message: str, assistant_message: str, new_session: bool):
     """Saves the current user question and LLM reply to a file named with today's date, grouped by session."""
-    # Ensure the 'chatHistory' folder exists
-    history_dir = "chatHistory"
+    # Ensure the 'chatHistory' folder exists within the 'data' folder
+    history_dir = "data/chatHistory"
     os.makedirs(history_dir, exist_ok=True)
     
     today = date.today().strftime("%Y-%m-%d")

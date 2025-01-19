@@ -5,22 +5,23 @@ from typing import List
 from dotenv import load_dotenv
 from functions import create_embedding, chunk_text, clean_text
 import re
+from langchain.document_loaders import PyPDFLoader
 
 # Load environment variables
-load_dotenv()
+load_dotenv(dotenv_path="config/.env")
 
 # Configure Gemini
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
 # Initialize ChromaDB
-client = chromadb.PersistentClient(path="./chroma_db")
+client = chromadb.PersistentClient(path="chroma_db")
 
 # Create or get collection
 collection_name = "budgetinfo"  
 collection = client.get_or_create_collection(name=collection_name)
 
 # Directory containing PDF documents
-documents_folder = "documents"
+documents_folder = "data/documents"
 
 print("Processing PDF documents...")
 for filename in os.listdir(documents_folder):
