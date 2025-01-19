@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 import google.generativeai as genai
 import re
 from typing import List
-from functions import count_tokens, sanitize_text, load_feedback_data ,load_files_in_date_range
+from functions import count_tokens, sanitize_text, load_feedback_data, load_files_in_date_range
 from datetime import date, timedelta
 
 
@@ -64,8 +64,6 @@ if "messages" not in st.session_state:
     st.session_state.messages = []
 
 
-
-
 # Load feedback data based on the selected data source and date range
 if "feedback_data" not in st.session_state or st.session_state.get("selected_options", None) != (data_source, start_date if data_source == "Chat History" else None, end_date if data_source == "Chat History" else None):
     st.session_state.selected_options = (data_source, start_date if data_source == "Chat History" else None, end_date if data_source == "Chat History" else None)
@@ -79,10 +77,33 @@ if "feedback_data" not in st.session_state or st.session_state.get("selected_opt
        feedback_file_path = os.path.join("data", "policy_feedback.txt")
        all_feedback_data = load_feedback_data(feedback_file_path)
     st.session_state.feedback_data = all_feedback_data
+    
+    # Calculate character count and approximate token count
+    if st.session_state.feedback_data:
+      combined_text = "\n".join(st.session_state.feedback_data)
+      char_count = len(combined_text)
+      approx_token_count = count_tokens(combined_text, st.session_state.model)
+      st.session_state.char_count = char_count
+      st.session_state.approx_token_count = approx_token_count
+    else:
+      st.session_state.char_count = 0
+      st.session_state.approx_token_count = 0
+
 
 # Set a flag for whether the first feedback prompt has been sent
 if "first_prompt_sent" not in st.session_state:
     st.session_state.first_prompt_sent = False
+
+# Display character count, token count and warning
+st.sidebar.markdown("---")
+st.sidebar.write(f"**Data Statistics:**")
+st.sidebar.write(f"Approximate Characters: {st.session_state.char_count}")
+st.sidebar.write(f"Approximate Tokens: {st.session_state.approx_token_count}")
+if st.session_state.approx_token_count > 750000:
+    st.sidebar.warning(
+        "The token count is above 750,000. Please select a smaller data range or fewer files to avoid potential issues."
+    )
+st.sidebar.markdown("---")
 
 # Display raw feedback data
 with st.expander("View Raw Feedback"):
