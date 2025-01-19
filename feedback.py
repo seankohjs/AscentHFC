@@ -4,34 +4,11 @@ from dotenv import load_dotenv
 import google.generativeai as genai
 import re
 from typing import List
+from functions import count_tokens, sanitize_text, load_feedback_data
+
 
 # Load environment variables
 load_dotenv()
-
-def count_tokens(text: str, model: genai.GenerativeModel) -> int:
-    """Counts tokens in a given text using the model's tokenizer."""
-    try:
-        response = model.count_tokens(text)
-        return response.total_tokens
-    except Exception as e:
-      st.error(f"Error counting tokens: {e}")
-      return 0
-
-def sanitize_text(text):
-    """Escapes lone dollar signs, preserving spacing."""
-    # Escape single dollar signs that are not part of LaTeX expressions, preserving spacing
-    text = re.sub(r'(?<!\$)(?<!\\)\$(?!\$)', r'\$', text)
-    return text
-
-
-def load_feedback_data(file_path: str) -> List[str]:
-    """Loads feedback data from a file."""
-    try:
-        with open(file_path, 'r') as f:
-            return [line.strip() for line in f]
-    except FileNotFoundError:
-        st.error(f"File not found: {file_path}")
-        return []
 
 
 st.title("Policy Feedback Analysis Chatbot")

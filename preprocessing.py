@@ -1,10 +1,9 @@
 import os
 import google.generativeai as genai
 import chromadb
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.document_loaders import PyPDFLoader
 from typing import List
 from dotenv import load_dotenv
+from functions import create_embedding, chunk_text, clean_text
 import re
 
 # Load environment variables
@@ -19,36 +18,6 @@ client = chromadb.PersistentClient(path="./chroma_db")
 # Create or get collection
 collection_name = "budgetinfo"  
 collection = client.get_or_create_collection(name=collection_name)
-
-def create_embedding(text: str) -> List[float]:
-    """Create embedding for a single piece of text"""
-    result = genai.embed_content(
-        model="models/text-embedding-004",  # Make sure this model is available
-        content=text
-    )
-    return result['embedding']
-
-def chunk_text(text: str) -> List[str]:
-    """Split text into chunks"""
-    text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=2000,
-        chunk_overlap=400,
-        separators=["\n\n", "\n", ". ", " ", ""]
-    )
-    return text_splitter.split_text(text)
-
-def clean_text(text: str) -> str:
-    """Removes italics, special characters, and ensures plain text."""
-    # Remove italics
-    text = re.sub(r'[\*_]', '', text)  # Remove * and _ for italics
-    
-    # Remove special characters
-    text = re.sub(r'[^\x00-\x7F]+', ' ', text)  # Keep only ASCII characters and replace non-ascii with space
-    
-     # Remove multiple spaces
-    text = re.sub(r'\s+', ' ', text).strip()
-
-    return text
 
 # Directory containing PDF documents
 documents_folder = "documents"

@@ -4,6 +4,8 @@ import re
 from typing import List
 from datetime import date
 import streamlit as st
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_community.document_loaders import PyPDFLoader
 
 
 def create_embedding(text: str) -> List[float]:
@@ -46,3 +48,34 @@ def save_chat_history(messages: List[dict]):
       print(f"Chat history saved to: {file_path}")
     except Exception as e:
       st.error(f"Error saving chat history: {e}")
+
+def chunk_text(text: str) -> List[str]:
+    """Split text into chunks"""
+    text_splitter = RecursiveCharacterTextSplitter(
+        chunk_size=2000,
+        chunk_overlap=400,
+        separators=["\n\n", "\n", ". ", " ", ""]
+    )
+    return text_splitter.split_text(text)
+
+def clean_text(text: str) -> str:
+    """Removes italics, special characters, and ensures plain text."""
+    # Remove italics
+    text = re.sub(r'[\*_]', '', text)  # Remove * and _ for italics
+    
+    # Remove special characters
+    text = re.sub(r'[^\x00-\x7F]+', ' ', text)  # Keep only ASCII characters and replace non-ascii with space
+    
+     # Remove multiple spaces
+    text = re.sub(r'\s+', ' ', text).strip()
+
+    return text
+
+def load_feedback_data(file_path: str) -> List[str]:
+    """Loads feedback data from a file."""
+    try:
+        with open(file_path, 'r') as f:
+            return [line.strip() for line in f]
+    except FileNotFoundError:
+        st.error(f"File not found: {file_path}")
+        return []

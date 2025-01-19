@@ -61,3 +61,14 @@ I do not have enough information to answer your question specifically from the B
 
 ----------------------------------------
 
+user: hi bot
+
+assistant: Hello! I am a chatbot designed to provide information about government schemes based on the Budget 2024 documents.
+
+I do not have enough information to answer your question specifically from the Budget 2024 documents.
+
+Could you please specify what information you are looking for, such as a particular scheme or area of interest?
+
+
+----------------------------------------
+
