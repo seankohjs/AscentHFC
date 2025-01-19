@@ -67,3 +67,27 @@ To help me understand what you're looking for, could you please specify what kin
 
 ----------------------------------------
 
+Session started at: 2025-01-19 21:03:41
+----------------------------------------
+
+user: hi ya
+
+assistant: I do not have enough information to answer specifically from the Budget 2024 documents.
+
+Could you please specify what information you are looking for? For example, are you interested in schemes for individuals, families, businesses, or something else?
+
+
+----------------------------------------
+
+Session started at: 2025-01-19 21:06:11
+----------------------------------------
+
+user: hi bro
+
+assistant: I do not have enough information to answer specifically from the Budget 2024 documents.
+
+Could you please specify what you would like to know about government schemes? For example, are you interested in schemes for individuals, businesses, or a specific sector?
+
+
+----------------------------------------
+

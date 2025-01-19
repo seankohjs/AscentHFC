@@ -17,10 +17,16 @@ st.title("KiasuKaki")
 st.sidebar.title("How Can I Help?")
 st.sidebar.write("""
 This chatbot is here to help you find information about various government schemes. 
-Just ask your question, and I'll do my best to provide you with clear and accurate 
-answers based on the documents I have available. I aim to make government information 
-easier to understand and access for everyone.
+Feel free to ask anything related to government schemes, such as how the government 
+can help you, eligibility criteria, application processes, etc. 
 """)
+
+st.sidebar.markdown("---")  # Add a line separator
+st.sidebar.write("""
+**Disclaimer:** This conversation will be recorded to help improve government 
+policies and schemes in the future.
+""")
+
 
 # Sidebar with feedback form
 with st.sidebar.form(key="policy_feedback_form", clear_on_submit=True):
