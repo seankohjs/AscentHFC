@@ -6,31 +6,10 @@ import chromadb
 from typing import List
 import re
 import time
+from functions import create_embedding, count_tokens, sanitize_text, save_chat_history
+
 # Load environment variables
 load_dotenv()
-
-def create_embedding(text: str) -> List[float]:
-    """Create embedding for a single piece of text"""
-    result = genai.embed_content(
-        model="models/text-embedding-004",  
-        content=text
-    )
-    return result['embedding']
-
-def count_tokens(text: str, model: genai.GenerativeModel) -> int:
-    """Counts tokens in a given text using the model's tokenizer."""
-    try:
-        response = model.count_tokens(text)
-        return response.total_tokens
-    except Exception as e:
-      st.error(f"Error counting tokens: {e}")
-      return 0
-
-def sanitize_text(text):
-    """Escapes lone dollar signs, preserving spacing."""
-    # Escape single dollar signs that are not part of LaTeX expressions, preserving spacing
-    text = re.sub(r'(?<!\$)(?<!\\)\$(?!\$)', r'\$', text)
-    return text
 
 st.title("KiasuKaki")
 
@@ -42,8 +21,6 @@ Just ask your question, and I'll do my best to provide you with clear and accura
 answers based on the documents I have available. I aim to make government information 
 easier to understand and access for everyone.
 """)
-
-
 
 # Sidebar with feedback form
 with st.sidebar.form(key="policy_feedback_form", clear_on_submit=True):
@@ -67,8 +44,6 @@ with st.sidebar.form(key="policy_feedback_form", clear_on_submit=True):
             st.sidebar.success("Thank you for your feedback! It's very valuable.")
         else:
             st.sidebar.warning("Please provide some feedback before submitting.")
-
-
 
 # Initialize ChromaDB with path to local database
 chroma_client = chromadb.PersistentClient(path="./chroma_db")
@@ -178,6 +153,9 @@ if prompt := st.chat_input("Type something"):
         
         # Add assistant response to chat history
         st.session_state.messages.append({"role": "assistant", "content": sanitized_response_text})
+        
+        # Save the entire chat history for this interaction
+        save_chat_history(st.session_state.messages)
         
     except Exception as e:
         st.error(f"An error occurred: {str(e)}")

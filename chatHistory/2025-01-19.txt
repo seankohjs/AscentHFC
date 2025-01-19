@@ -1,0 +1,63 @@
+user: Hi bot, what do you do?
+
+assistant: I am a chatbot designed to provide information about government schemes based on the Budget 2024 documents.
+
+However, your question is very broad and it is difficult to provide a specific answer.
+
+To help me understand what you need, could you please clarify what you would like to know about my functions related to government schemes? Are you perhaps looking for information on specific schemes, or a summary of all schemes?
+
+
+----------------------------------------
+
+user: Hi bot, what do you do?
+
+assistant: I am a chatbot designed to provide information about government schemes based on the Budget 2024 documents.
+
+However, your question is very broad and it is difficult to provide a specific answer.
+
+To help me understand what you need, could you please clarify what you would like to know about my functions related to government schemes? Are you perhaps looking for information on specific schemes, or a summary of all schemes?
+
+
+user: could you provide schemes a 22 year old like me might qualify for in singapore? im male and singaporean
+
+assistant: Based on the Budget 2024 documents, here are some schemes that a 22 year old male Singaporean may qualify for:
+
+## Potential Schemes for a 22 Year Old Male Singaporean
+
+*   **National Service LifeSG Credits:** You may be eligible for \$200 in LifeSG credits if you are a past or present national serviceman. These credits can be used at merchants accepting PayNow UEN QR or NETS QR payments and are valid for one year from the date of disbursement.
+
+*   **Cost-of-Living Special Payment:** You may be eligible for a one-off cash payment of \$200 to \$400 in September 2024, provided that:
+    *   You are a Singapore Citizen residing in Singapore.
+    *   Your Assessable Income for the Year of Assessment 2023 does not exceed \$100,000.
+    *   You do not own more than one property.
+
+*   **MediSave Bonus:** You may be eligible for a one-time MediSave bonus of up to \$300, which will be provided to all adult Singaporeans aged 21 to 50.
+
+*   **Workfare Income Supplement (WIS) Scheme:** If you are employed, self-employed, or a platform worker, you may be eligible for WIS payments if you meet the following criteria:
+    *   You are a Singapore Citizen.
+    *   You are 30 years old and above as of 31 December of the Work Year.
+    *   Your gross monthly income is between \$500 and \$3,000, and if married, your spouse's assessable income does not exceed \$70,000.
+    *   You live in a property with an annual value of up to \$21,000.
+    *   You do not own more than one property.
+    *   The specific payment amounts and conditions vary depending on your employment status.
+
+*   **SkillsFuture Credit:** All Singaporeans aged 25 and above are entitled to \$500 in SkillsFuture credit, which can be used for training courses. However, you would not qualify at age 22, because you are not yet 25.
+
+*   **ITE Progression Award**: If you are an ITE graduate aged 30 and below, and you enroll in a diploma program at a polytechnic, ITE, or arts institution, your Post-Secondary Education Account will receive a \$5,000 top-up. Additionally, upon completing your diploma, your CPF Ordinary Account will receive a \$10,000 top-up.
+
+Please note that eligibility for some schemes may depend on additional factors such as income, property ownership, and specific employment conditions. You may wish to check the specific details and criteria for each scheme to confirm your eligibility.
+
+To ensure you are aware of all the possible schemes you may be eligible for, could you please tell me if you have completed your National Service?
+
+
+----------------------------------------
+
+user: hi bot
+
+assistant: Hello! I am a chatbot designed to provide information about government schemes based on the Budget 2024 documents.
+
+I do not have enough information to answer your question specifically from the Budget 2024 documents. Could you please specify what you would like to know about the government schemes? For example, are you interested in schemes for individuals, businesses, or a particular sector?
+
+
+----------------------------------------
+
