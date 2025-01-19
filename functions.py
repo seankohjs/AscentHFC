@@ -2,10 +2,10 @@ import os
 import google.generativeai as genai
 import re
 from typing import List
-from datetime import date
+from datetime import date, datetime
 import streamlit as st
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_community.document_loaders import PyPDFLoader
+from langchain.document_loaders import PyPDFLoader
 
 
 def create_embedding(text: str) -> List[float]:
@@ -31,8 +31,8 @@ def sanitize_text(text):
     text = re.sub(r'(?<!\$)(?<!\\)\$(?!\$)', r'\$', text)
     return text
 
-def save_chat_history(messages: List[dict]):
-    """Saves chat history to a file named with today's date."""
+def save_chat_history(user_message: str, assistant_message: str, new_session: bool):
+    """Saves the current user question and LLM reply to a file named with today's date, grouped by session."""
     # Ensure the 'chatHistory' folder exists
     history_dir = "chatHistory"
     os.makedirs(history_dir, exist_ok=True)
@@ -41,13 +41,17 @@ def save_chat_history(messages: List[dict]):
     file_path = os.path.join(history_dir, f"{today}.txt")
 
     try:
-      with open(file_path, "a", encoding="utf-8") as f:
-        for message in messages:
-          f.write(f"{message['role']}: {message['content']}\n\n")
-        f.write("-" * 40 + "\n\n") # Add a separator between conversations
-      print(f"Chat history saved to: {file_path}")
+        with open(file_path, "a", encoding="utf-8") as f:
+            if new_session:
+              now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+              f.write(f"Session started at: {now}\n")
+              f.write("-" * 40 + "\n\n")
+            f.write(f"user: {user_message}\n\n")
+            f.write(f"assistant: {assistant_message}\n\n")
+            f.write("-" * 40 + "\n\n")  # Add a separator between turns
+        print(f"Chat history saved to: {file_path}")
     except Exception as e:
-      st.error(f"Error saving chat history: {e}")
+        st.error(f"Error saving chat history: {e}")
 
 def chunk_text(text: str) -> List[str]:
     """Split text into chunks"""

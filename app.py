@@ -7,7 +7,7 @@ from typing import List
 import re
 import time
 from functions import create_embedding, count_tokens, sanitize_text, save_chat_history
-
+   
 # Load environment variables
 load_dotenv()
 
@@ -79,6 +79,10 @@ if "total_input_tokens" not in st.session_state:
     st.session_state.total_input_tokens = 0
 if "total_output_tokens" not in st.session_state:
   st.session_state.total_output_tokens = 0
+
+# Set a flag for whether it's a new session
+if "new_session" not in st.session_state:
+    st.session_state.new_session = True
 
 # Display chat messages
 for message in st.session_state.messages:
@@ -155,7 +159,10 @@ if prompt := st.chat_input("Type something"):
         st.session_state.messages.append({"role": "assistant", "content": sanitized_response_text})
         
         # Save the entire chat history for this interaction
-        save_chat_history(st.session_state.messages)
+        save_chat_history(prompt, sanitized_response_text, st.session_state.new_session)
+        
+        # Reset new_session to False after first message
+        st.session_state.new_session = False
         
     except Exception as e:
         st.error(f"An error occurred: {str(e)}")
@@ -167,11 +174,5 @@ if len(st.session_state.messages) > 0:
         st.session_state.chat_session = st.session_state.model.start_chat(history=[])  # Reset chat session
         st.session_state.total_input_tokens = 0
         st.session_state.total_output_tokens = 0
-        st.rerun() 
-
-# # Display token counts in sidebar (For debugging purposes)
-# st.sidebar.markdown("---")
-# st.sidebar.subheader("Token Usage")
-# st.sidebar.write(f"Total Input Tokens: {st.session_state.total_input_tokens}")
-# st.sidebar.write(f"Total Output Tokens: {st.session_state.total_output_tokens}")
-# st.sidebar.write(f"Total Tokens: {st.session_state.total_input_tokens + st.session_state.total_output_tokens}")
+        st.session_state.new_session = True  # Reset for next session
+        st.rerun()
