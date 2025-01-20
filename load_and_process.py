@@ -155,11 +155,11 @@ def process_data(df):
 
     #Time Series
     df['timestamp'] = pd.to_datetime(df['timestamp'])
-    df = df.set_index('timestamp') #Make sure that your timestamp column is a datetime object.
-    df_monthly = df.resample('M').count() #Group by month
-    df_monthly.rename(columns={"text":"Feedback Count"}, inplace=True) #rename for plotting later
-    df_monthly["Date"] = df_monthly.index # add in a date column
-    return overall_sentiment, total_feedback, positive_feedback, negative_feedback, category_counts, segments, df_monthly
+    df['date'] = df['timestamp'].dt.date
+    df_daily = df.groupby('date').count().reset_index()
+    df_daily.rename(columns={"text":"Feedback Count"}, inplace=True) #rename for plotting later
+    df_daily['Date'] = pd.to_datetime(df_daily['date'])
+    return overall_sentiment, total_feedback, positive_feedback, negative_feedback, category_counts, segments, df_daily
 
 def summarize_feedback(df):
     combined_texts = "\n".join([f"- {text}" for text in df['text']])
