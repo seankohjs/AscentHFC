@@ -6,7 +6,7 @@ import chromadb
 from typing import List
 import re
 import time
-from functions import create_embedding, count_tokens, sanitize_text, save_chat_history
+from functions import create_embedding, count_tokens, sanitize_text, save_chat_history, classify_message
 from datetime import datetime
 
 
@@ -25,11 +25,11 @@ can help you, eligibility criteria, application processes, etc.
 
 st.sidebar.markdown("---")  # Add a line separator
 
-# Initialize consent state
+# Initialize consent state (set to True for default checked)
 if "consent" not in st.session_state:
-    st.session_state.consent = False
+    st.session_state.consent = True
 
-# Consent checkbox in sidebar
+# Consent checkbox in sidebar (default value is set)
 consent_checkbox = st.sidebar.checkbox(
     "I consent to my conversation being recorded", value=st.session_state.consent
 )
@@ -143,17 +143,28 @@ if prompt := st.chat_input("Type something"):
         # Prepare context from retrieved documents
         context_docs = results['documents'][0]  # List of retrieved document texts
         context_metadata = results['metadatas'][0]  # list of retrieved metadatas
+
+        # Format the chat history to include in prompt
+        chat_history = ""
+        for message in st.session_state.messages[:-1]:
+            if message["role"] == "user":
+                chat_history += f"User: {message['content']}\n"
+            elif message["role"] == "assistant":
+               chat_history += f"Assistant: {message['content']}\n"
         
         # Create enhanced prompt with context
         enhanced_prompt = f"""You are a helpful and informative assistant chatbot designed to provide citizens with information about government schemes. Your goal is to provide clear, accurate, and well-formatted information based on the documents provided.
 
         Context from Budget 2024 documents about government schemes:
         {' '.join(context_docs)}
+        
+        Previous Conversation:
+        {chat_history}
 
         User's question: {prompt}
 
         Instructions:
-        1. Base your response ONLY on the provided context from the Budget 2024 documents. Avoid introducing external knowledge or assumptions.
+        1. Base your response ONLY on the provided context from the Budget 2024 documents and the previous conversation. Avoid introducing external knowledge or assumptions.
         2. Provide a clear and concise answer that is easy to understand for the average citizen. Do not include italicized words, bold text, or any special formatting unless explicitly required by the user. The output text should contain only standard text characters.
         3. If the provided context from the Budget 2024 documents does not fully answer the question, or if the user's question is ambiguous, state that you do not have enough information to answer specifically from the Budget 2024 documents, and that the user may need to consult official authorities, or ask additional clarifying questions. Then, **ask a specific clarifying question** to help you better understand the user's needs.
         4. When applicable, include specific details like dates, amounts, or specific scheme names from the context to be most accurate. Ensure that numerical ranges are formatted correctly with spaces (e.g., "200 to 400"), and there is a space after any number and before any word. Remove any extraneous text, such as the names of schemes or documents, that may be next to each requirement if they do not add clarity.
@@ -188,12 +199,22 @@ if prompt := st.chat_input("Type something"):
             output_tokens = count_tokens(response.text, st.session_state.model)
             st.session_state.total_output_tokens += output_tokens
         
+        # Classify the message
+        chat_history_for_classification = ""
+        for message in st.session_state.messages:
+            if message["role"] == "user":
+                chat_history_for_classification += f"User: {message['content']}\n"
+            elif message["role"] == "assistant":
+               chat_history_for_classification += f"Assistant: {message['content']}\n"
+        
+        classification = classify_message(chat_history_for_classification, prompt, st.session_state.model)
+        
         # Add assistant response to chat history
         st.session_state.messages.append({"role": "assistant", "content": sanitized_response_text})
         
         # Save the entire chat history for this interaction only if the user gave consent
         if st.session_state.consent:
-            save_chat_history(prompt, sanitized_response_text, st.session_state.new_session)
+            save_chat_history(prompt, sanitized_response_text, st.session_state.new_session, category=classification)
         
         # Reset new_session to False after first message
         st.session_state.new_session = False

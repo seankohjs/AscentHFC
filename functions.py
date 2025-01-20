@@ -31,28 +31,83 @@ def sanitize_text(text):
     text = re.sub(r'(?<!\$)(?<!\\)\$(?!\$)', r'\$', text)
     return text
 
-def save_chat_history(user_message: str, assistant_message: str, new_session: bool):
-    """Saves the current user question and LLM reply to a file named with today's date, grouped by session."""
-    # Ensure the 'chatHistory' folder exists within the 'data' folder
+def save_chat_history(user_message: str, assistant_message: str, new_session: bool, category: str = None):
+    """Saves the current user question and LLM reply to a file named with today's date, grouped by session and category."""
+    
     history_dir = "data/chatHistory"
     os.makedirs(history_dir, exist_ok=True)
+
+    normal_chat_dir = os.path.join(history_dir, "normalchat")
+    os.makedirs(normal_chat_dir, exist_ok=True)
+    
+    feedback_dir = os.path.join(history_dir, "feedback")
+    os.makedirs(feedback_dir, exist_ok=True)
     
     today = date.today().strftime("%Y-%m-%d")
-    file_path = os.path.join(history_dir, f"{today}.txt")
     
-    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S") # Define now here, before the if statement
+    original_file_path = os.path.join(history_dir, f"{today}.txt")
+    normal_chat_file_path = os.path.join(normal_chat_dir, f"normalchat_{today}.txt")
+    feedback_file_path = os.path.join(feedback_dir, f"feedback_{today}.txt")
+    
+    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     
     try:
-        with open(file_path, "a", encoding="utf-8") as f:
+        # Save the original chat history (user + assistant)
+        with open(original_file_path, "a", encoding="utf-8") as f:
             if new_session:
-              f.write(f"Session started at: {now}\n")
-              f.write("-" * 40 + "\n\n")
+                f.write(f"Session started at: {now}\n")
+                f.write("-" * 40 + "\n\n")
             f.write(f"user: {user_message}\t{now}\n\n")
             f.write(f"assistant: {assistant_message}\n\n")
             f.write("-" * 40 + "\n\n")  # Add a separator between turns
-        print(f"Chat history saved to: {file_path}")
+
+        # Save user message to categorized file
+        if category == "normalchat":
+            with open(normal_chat_file_path, "a", encoding="utf-8") as f:
+                f.write(f"user: {user_message}\t{now}\n\n")
+        elif category == "feedback":
+            with open(feedback_file_path, "a", encoding="utf-8") as f:
+              f.write(f"user: {user_message}\t{now}\n\n")
+
+        print(f"Chat history saved to: {original_file_path}")
+        if category:
+          print(f"Chat history saved to categorized file: {normal_chat_file_path if category == 'normalchat' else feedback_file_path}")
+
+
     except Exception as e:
         st.error(f"Error saving chat history: {e}")
+
+def classify_message(chat_history: str, current_message: str, model: genai.GenerativeModel) -> str:
+    """Classifies the current message as 'normalchat' or 'feedback' using Gemini."""
+    classification_prompt = f"""You are a classification tool designed to categorize user messages.
+
+        Instructions:
+        1.  Analyze the current message and previous chat history provided by the user.
+        2.  Determine whether the current message is a 'normalchat' message, in which the user is asking a question or a query about the topic, or a 'feedback' message, in which the user is providing feedback.
+        3.  Return ONLY one of two strings: 'normalchat' or 'feedback' as the classification.
+        4.  Do NOT include any additional text, just the classification.
+
+        Previous Chat History:
+        {chat_history}
+
+        Current Message: {current_message}
+        """
+    try:
+        # Start a new chat session for classification
+        chat_session = model.start_chat(history=[])
+        response = chat_session.send_message(classification_prompt)
+        cleaned_response = response.text.strip().lower()
+
+        if "normalchat" in cleaned_response:
+            return "normalchat"
+        elif "feedback" in cleaned_response:
+            return "feedback"
+        else:
+            return "normalchat" # return default classification if not clear
+    
+    except Exception as e:
+        st.error(f"Error classifying message: {e}")
+        return "normalchat" # default case if it errors out
 
 def chunk_text(text: str) -> List[str]:
     """Split text into chunks"""
