@@ -19,7 +19,7 @@ st.title("Feedback Analysis Dashboard")
 # Sidebar
 st.sidebar.title("Navigation")
 st.sidebar.write("Use the options below to navigate the dashboard.")
-selected_section = st.sidebar.radio("Go to", ["Preprocess Data", "Overview Report", "Visual Charts", "Settings"])
+selected_section = st.sidebar.radio("Go to", ["Preprocess Data", "Overview Report", "Visual Charts", "View Feedback", "Settings"])
 
 st.sidebar.markdown("---")
 st.sidebar.header("Dashboard Instructions")
@@ -38,6 +38,11 @@ elif selected_section == "Visual Charts":
         st.sidebar.write("""
         Use this section to visualize the feedback data with charts.
         Select a preprocessed data file to load feedback data.
+    """)
+elif selected_section == "View Feedback":
+        st.sidebar.write("""
+        Use this section to view the individual feedback data.
+        Select preprocessed data to view, and filter by category and sentiment.
     """)
 elif selected_section == "Settings":
         st.sidebar.write("""
@@ -268,6 +273,44 @@ elif selected_section == "Visual Charts":
               )
           )
           st.plotly_chart(fig, use_container_width=True)
+    else:
+        st.warning("Please select a valid preprocessed data file.")
+
+# --- View Feedback Page ---
+elif selected_section == "View Feedback":
+    st.header("View Feedback")
+    st.write("Select preprocessed data to view, and filter by category and sentiment.")
+    st.markdown("---")
+
+    # Load Preprocessed Data
+    preprocessed_files = [f for f in os.listdir("data/preprocessed") if f.endswith(".parquet")]
+    if preprocessed_files:
+      selected_file = st.selectbox("Select preprocessed data:", preprocessed_files)
+      if selected_file:
+        df = load_preprocessed_data(selected_file)
+    else:
+      df = pd.DataFrame()
+      st.warning("No preprocessed data available, please process the data in the Preprocess Data tab")
+    
+    if not df.empty:
+        # Filters
+        unique_categories = ["All"] + list(df["category"].unique())
+        selected_category = st.selectbox("Filter by Category", unique_categories)
+        unique_sentiments = ["All"] + list(df["sentiment"].unique())
+        selected_sentiment = st.selectbox("Filter by Sentiment", unique_sentiments)
+
+        # Apply filters
+        filtered_df = df.copy()
+        if selected_category != "All":
+            filtered_df = filtered_df[filtered_df["category"] == selected_category]
+        if selected_sentiment != "All":
+            filtered_df = filtered_df[filtered_df["sentiment"] == selected_sentiment]
+
+        # Display the filtered data
+        if not filtered_df.empty:
+           st.dataframe(filtered_df[["text", "timestamp", "category", "sentiment"]], hide_index = True)
+        else:
+            st.write("No feedback data found for the selected filters")
     else:
         st.warning("Please select a valid preprocessed data file.")
 
