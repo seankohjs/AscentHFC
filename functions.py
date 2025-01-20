@@ -43,11 +43,15 @@ def save_chat_history(user_message: str, assistant_message: str, new_session: bo
     feedback_dir = os.path.join(history_dir, "feedback")
     os.makedirs(feedback_dir, exist_ok=True)
     
+    pure_feedback_dir = os.path.join(history_dir, "purefeedback")
+    os.makedirs(pure_feedback_dir, exist_ok=True)
+    
     today = date.today().strftime("%Y-%m-%d")
     
     original_file_path = os.path.join(history_dir, f"{today}.txt")
     normal_chat_file_path = os.path.join(normal_chat_dir, f"normalchat_{today}.txt")
     feedback_file_path = os.path.join(feedback_dir, f"feedback_{today}.txt")
+    pure_feedback_file_path = os.path.join(pure_feedback_dir, f"purefeedback_{today}.txt")
     
     now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     
@@ -70,11 +74,15 @@ def save_chat_history(user_message: str, assistant_message: str, new_session: bo
                 if previous_assistant_message:
                     f.write(f"assistant: {previous_assistant_message}\n\n")
                 f.write(f"user: {user_message}\t{now}\n\n")
-
-
+            # Save pure feedback user message
+            with open(pure_feedback_file_path, "a", encoding="utf-8") as f:
+              f.write(f"user: {user_message}\t{now}\n\n")
+              
         print(f"Chat history saved to: {original_file_path}")
         if category:
-          print(f"Chat history saved to categorized file: {normal_chat_file_path if category == 'normalchat' else feedback_file_path}")
+          print(f"Chat history saved to categorized file: {normal_chat_file_path if category == 'normalchat' else feedback_file_path if category == 'feedback' else None}")
+          if category == 'feedback':
+             print(f"Chat history saved to pure feedback file: {pure_feedback_file_path}")
 
 
     except Exception as e:
