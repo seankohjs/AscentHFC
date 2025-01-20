@@ -50,32 +50,32 @@ else:
         """)
 
 # Sidebar with feedback form
-with st.sidebar.form(key="policy_feedback_form", clear_on_submit=True):
-    st.write("Tell us what you think about the government schemes:")
+# with st.sidebar.form(key="policy_feedback_form", clear_on_submit=True):
+#     st.write("Tell us what you think about the government schemes:")
     
-    feedback = st.text_area(
-        "What are your thoughts on the policies/schemes discussed?",
-        placeholder="Enter your feedback here...",
-        height=150,
-    )
+#     feedback = st.text_area(
+#         "What are your thoughts on the policies/schemes discussed?",
+#         placeholder="Enter your feedback here...",
+#         height=150,
+#     )
     
-    rating = st.slider("On a scale of 1 to 5, how helpful do you find these schemes?", 1, 5, 3)
+#     rating = st.slider("On a scale of 1 to 5, how helpful do you find these schemes?", 1, 5, 3)
     
-    submit_feedback = st.form_submit_button("Submit Feedback")
+#     submit_feedback = st.form_submit_button("Submit Feedback")
 
-    if submit_feedback:
-        if feedback:  # Check if feedback is not empty
-            # Get current date and time
-            now = datetime.now()
-            timestamp = now.strftime("%Y-%m-%d %H:%M:%S")
+#     if submit_feedback:
+#         if feedback:  # Check if feedback is not empty
+#             # Get current date and time
+#             now = datetime.now()
+#             timestamp = now.strftime("%Y-%m-%d %H:%M:%S")
 
-            # Save feedback to a file (append mode)
-            with open("data/policy_feedback.txt", "a") as f:
-                f.write(f"Timestamp: {timestamp}\n")
-                f.write(f"Feedback: {feedback}\nRating: {rating}\n\n")  # Append feedback with a separator
-            st.sidebar.success("Thank you for your feedback! It's very valuable.")
-        else:
-            st.sidebar.warning("Please provide some feedback before submitting.")
+#             # Save feedback to a file (append mode)
+#             with open("data/policy_feedback.txt", "a") as f:
+#                 f.write(f"Timestamp: {timestamp}\n")
+#                 f.write(f"Feedback: {feedback}\nRating: {rating}\n\n")  # Append feedback with a separator
+#             st.sidebar.success("Thank you for your feedback! It's very valuable.")
+#         else:
+#             st.sidebar.warning("Please provide some feedback before submitting.")
 
 
 # Initialize ChromaDB with path to local database
@@ -153,7 +153,7 @@ if prompt := st.chat_input("Type something"):
                chat_history += f"Assistant: {message['content']}\n"
         
         # Create enhanced prompt with context
-        enhanced_prompt = f"""You are a helpful and informative assistant chatbot designed to provide citizens with information about government schemes. Your goal is to provide clear, accurate, and well-formatted information based on the documents provided.
+        enhanced_prompt = f"""You are a helpful and informative assistant chatbot designed to provide citizens with information about government schemes. Your goal is to provide clear, accurate, and well-formatted information based on the documents provided and the previous conversation history. You will add a formatted feedback line to the end of your responses, *unless* the user has asked a question about providing feedback.
 
         Context from Budget 2024 documents about government schemes:
         {' '.join(context_docs)}
@@ -166,7 +166,7 @@ if prompt := st.chat_input("Type something"):
         Instructions:
         1. Base your response ONLY on the provided context from the Budget 2024 documents and the previous conversation. Avoid introducing external knowledge or assumptions.
         2. Provide a clear and concise answer that is easy to understand for the average citizen. Do not include italicized words, bold text, or any special formatting unless explicitly required by the user. The output text should contain only standard text characters.
-        3. If the provided context from the Budget 2024 documents does not fully answer the question, or if the user's question is ambiguous, state that you do not have enough information to answer specifically from the Budget 2024 documents, and that the user may need to consult official authorities, or ask additional clarifying questions. Then, **ask a specific clarifying question** to help you better understand the user's needs.
+        3. If the user's question is *only* a simple greeting (e.g., "hi", "hello", "good morning"), acknowledge the greeting politely, and state that you are a chatbot designed to provide information about government schemes, and then ask how you can assist them. Do *not* provide a list of schemes. If the user's question is not a simple greeting, but is vague or ambiguous, **ask a specific clarifying question** to help you better understand the user's needs, *before* stating that you do not have enough information to answer specifically from the Budget 2024 documents. Do not state "I do not have enough information" without first making an attempt to understand the user's needs.
         4. When applicable, include specific details like dates, amounts, or specific scheme names from the context to be most accurate. Ensure that numerical ranges are formatted correctly with spaces (e.g., "200 to 400"), and there is a space after any number and before any word. Remove any extraneous text, such as the names of schemes or documents, that may be next to each requirement if they do not add clarity.
         5. Avoid carrying over formatting from source documents that may include italics, bold text, or other stylistic choices unless they are necessary for clarity.
         6. If the provided context has multiple options that may answer the question, provide all options, and explain all of them clearly.
@@ -179,6 +179,9 @@ if prompt := st.chat_input("Type something"):
         13. Sanitize the output to ensure that text is clean and consistent, avoiding any carryover of special formatting or symbols from source documents, and that text is spaced correctly with numbers.
         14. The response should only have standard text characters, no html characters or special characters.
         15. If you do not have enough information to provide an answer specifically from the Budget 2024 documents, ask a clarifying question so that the user can be more specific to give you enough information to answer their question.
+        16. If the user asks where they can give feedback, tell them that they can give feedback directly to the chatbot, and they can also visit official government websites or use official government feedback channels.
+        17. If the user provides feedback, acknowledge and thank them for it, using an elegant tone. If the feedback also includes a question, respond to the question. Use the chat history to determine if the user is providing feedback.
+        18. *Unless* the user has asked a question about providing feedback, add a new line, and then add the following message as a separate line at the end of your response: '\n\n---\n**If you have any feedback, you may provide it directly to this bot, visit official government websites, or use government feedback channels.**'
         """
         
          # Count input tokens using the enhanced prompt
@@ -192,6 +195,11 @@ if prompt := st.chat_input("Type something"):
             response = st.session_state.chat_session.send_message(enhanced_prompt)
 
             sanitized_response_text = sanitize_text(response.text)
+            
+            # Check if the user asked how to give feedback, and don't add the footer if they did
+            # REMOVE THIS ENTIRE LINE
+            #if "give feedback" not in prompt.lower():
+            #  sanitized_response_text += ' \n\n If you have any feedback, you may provide it directly to this bot, visit official government websites, or use government feedback channels.'
 
             st.markdown(sanitized_response_text)
             
@@ -209,12 +217,19 @@ if prompt := st.chat_input("Type something"):
         
         classification = classify_message(chat_history_for_classification, prompt, st.session_state.model)
         
+        # Get the previous assistant message if it exists
+        previous_assistant_message = None
+        for message in reversed(st.session_state.messages):
+            if message["role"] == "assistant":
+                previous_assistant_message = message["content"]
+                break
+        
         # Add assistant response to chat history
         st.session_state.messages.append({"role": "assistant", "content": sanitized_response_text})
         
         # Save the entire chat history for this interaction only if the user gave consent
         if st.session_state.consent:
-            save_chat_history(prompt, sanitized_response_text, st.session_state.new_session, category=classification)
+            save_chat_history(prompt, sanitized_response_text, st.session_state.new_session, category=classification, previous_assistant_message = previous_assistant_message)
         
         # Reset new_session to False after first message
         st.session_state.new_session = False

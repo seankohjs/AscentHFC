@@ -31,7 +31,7 @@ def sanitize_text(text):
     text = re.sub(r'(?<!\$)(?<!\\)\$(?!\$)', r'\$', text)
     return text
 
-def save_chat_history(user_message: str, assistant_message: str, new_session: bool, category: str = None):
+def save_chat_history(user_message: str, assistant_message: str, new_session: bool, category: str = None, previous_assistant_message: str = None):
     """Saves the current user question and LLM reply to a file named with today's date, grouped by session and category."""
     
     history_dir = "data/chatHistory"
@@ -67,7 +67,10 @@ def save_chat_history(user_message: str, assistant_message: str, new_session: bo
                 f.write(f"user: {user_message}\t{now}\n\n")
         elif category == "feedback":
             with open(feedback_file_path, "a", encoding="utf-8") as f:
-              f.write(f"user: {user_message}\t{now}\n\n")
+                if previous_assistant_message:
+                    f.write(f"assistant: {previous_assistant_message}\n\n")
+                f.write(f"user: {user_message}\t{now}\n\n")
+
 
         print(f"Chat history saved to: {original_file_path}")
         if category:
