@@ -4,7 +4,7 @@ import plotly.graph_objects as go
 import plotly.express as px
 import pandas as pd
 import numpy as np
-from load_and_process import process_data, get_all_feedback_data, summarize_feedback
+from functions import process_data, get_all_feedback_data, summarize_feedback
 
 # Page configuration
 st.set_page_config(
