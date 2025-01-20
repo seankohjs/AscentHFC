@@ -7,6 +7,8 @@ from typing import List
 import re
 import time
 from functions import create_embedding, count_tokens, sanitize_text, save_chat_history
+from datetime import datetime
+
 
 # Load environment variables
 load_dotenv(dotenv_path="config/.env")
@@ -22,11 +24,30 @@ can help you, eligibility criteria, application processes, etc.
 """)
 
 st.sidebar.markdown("---")  # Add a line separator
-st.sidebar.write("""
-**Disclaimer:** This conversation will be recorded to help improve government 
-policies and schemes in the future.
-""")
 
+# Initialize consent state
+if "consent" not in st.session_state:
+    st.session_state.consent = False
+
+# Consent checkbox in sidebar
+consent_checkbox = st.sidebar.checkbox(
+    "I consent to my conversation being recorded", value=st.session_state.consent
+)
+
+# Update consent state based on checkbox
+st.session_state.consent = consent_checkbox
+
+# Conditional Disclaimer
+if st.session_state.consent:
+    st.sidebar.markdown("""
+        **Disclaimer:** This conversation **is being recorded** to help improve government 
+        policies and schemes in the future.
+        """)
+else:
+    st.sidebar.markdown("""
+        **Disclaimer:** This conversation **is not being recorded**. Please note that without your consent,
+        your conversation will not be saved to help improve government policies and schemes.
+        """)
 
 # Sidebar with feedback form
 with st.sidebar.form(key="policy_feedback_form", clear_on_submit=True):
@@ -44,12 +65,18 @@ with st.sidebar.form(key="policy_feedback_form", clear_on_submit=True):
 
     if submit_feedback:
         if feedback:  # Check if feedback is not empty
+            # Get current date and time
+            now = datetime.now()
+            timestamp = now.strftime("%Y-%m-%d %H:%M:%S")
+
             # Save feedback to a file (append mode)
             with open("data/policy_feedback.txt", "a") as f:
+                f.write(f"Timestamp: {timestamp}\n")
                 f.write(f"Feedback: {feedback}\nRating: {rating}\n\n")  # Append feedback with a separator
             st.sidebar.success("Thank you for your feedback! It's very valuable.")
         else:
             st.sidebar.warning("Please provide some feedback before submitting.")
+
 
 # Initialize ChromaDB with path to local database
 chroma_client = chromadb.PersistentClient(path="chroma_db")
@@ -164,8 +191,9 @@ if prompt := st.chat_input("Type something"):
         # Add assistant response to chat history
         st.session_state.messages.append({"role": "assistant", "content": sanitized_response_text})
         
-        # Save the entire chat history for this interaction
-        save_chat_history(prompt, sanitized_response_text, st.session_state.new_session)
+        # Save the entire chat history for this interaction only if the user gave consent
+        if st.session_state.consent:
+            save_chat_history(prompt, sanitized_response_text, st.session_state.new_session)
         
         # Reset new_session to False after first message
         st.session_state.new_session = False

@@ -1,0 +1,53 @@
+Session started at: 2025-01-20 02:27:35
+----------------------------------------
+
+user: test
+
+assistant: I do not have enough information to answer specifically from the Budget 2024 documents. Could you please specify what you would like to test, such as a specific government scheme or program?
+
+
+----------------------------------------
+
+Session started at: 2025-01-20 02:28:07
+----------------------------------------
+
+user: hi
+
+assistant: Hello! I am an assistant chatbot providing information about government schemes based on the Budget 2024 documents.
+
+I do not have enough information to answer your question specifically from the Budget 2024 documents. Could you please specify what kind of information you are looking for? For example, are you interested in schemes for individuals, families, or businesses?
+
+
+----------------------------------------
+
+Session started at: 2025-01-20 02:29:52
+----------------------------------------
+
+user: Hello world	2025-01-20 02:29:52
+
+assistant: I do not have enough information to answer specifically from the Budget 2024 documents.
+
+To assist you better, could you please specify what information you are looking for regarding government schemes?
+
+
+----------------------------------------
+
+Session started at: 2025-01-20 02:37:56
+----------------------------------------
+
+user: Hi	2025-01-20 02:37:56
+
+assistant: Hello! I can help you with information about government schemes from the Budget 2024 documents.
+
+However, your question is very broad. Could you please specify what kind of information you are looking for? For example, are you interested in schemes for:
+
+*   Individuals or businesses?
+*   Specific sectors or industries?
+*   Particular types of support, like financial assistance or training?
+*   Specific types of rebates or vouchers?
+
+Providing more details will help me give you a more accurate and relevant response.
+
+
+----------------------------------------
+

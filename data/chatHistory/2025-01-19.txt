@@ -110,3 +110,252 @@ To help me better answer your questions, could you please specify what type of i
 
 ----------------------------------------
 
+Session started at: 2025-01-19 23:37:40
+----------------------------------------
+
+user: 你好，我想了解更多关于政府的乐龄补贴计划。 请问有哪些资格要求？ 我需要满足什么条件才能获得这些补助？还有，是否有关于如何申请的具体步骤？
+
+assistant: 你好！根据 2024 年预算文件，有几项计划可能与您所指的乐龄补贴相关，但是具体资格要求和申请步骤信息在文件中没有详细说明。我可以提供一些关于这些计划的信息，但您可能需要向官方机构查询更具体的细节。
+
+# 乐龄补贴计划
+
+以下是 2024 年预算中提到的可能与乐龄补贴相关的计划：
+
+*   **Majulah Package：**
+    *   此计划通过一次性中央公积金 (CPF) 支付来补充符合条件的工作老年人的退休储蓄。
+    *   也包括通过一次性中央公积金支付来补充老年人的医疗储蓄，帮助他们支付医疗费用。
+    *   此外，对于中央公积金退休储蓄低于一定水平的老年人，还会提供一次性补助。
+
+*   **Silver Support Scheme：**
+    *   此计划为符合条件的老年人提供季度现金补助。
+
+*   **MediSave Bonus：**
+    *   此计划帮助新加坡公民抵消医疗费用并建立医疗储蓄。
+    *   对于符合条件的老年人，会通过一次性中央公积金支付来补充医疗储蓄。
+
+*   **Age Well SG：**
+    *   此计划为老年人提供 35 亿新元的援助，具体措施如下：
+        *   加强社区护理服务，包括更多疗养院和更好的居家护理安排，以帮助老年人在家中和社区中自信地老去。
+        *   对住宅区进行银色升级改造，包括治疗花园、无障碍坡道和老年人友好的家居设施。
+        *   改善老年人的通勤基础设施，如更多有遮蔽的连廊、具有老年人友好设施的巴士站以及更安全和更方便行人的道路。
+
+# 其他支持计划
+
+以下是其他可能对老年人有用的计划：
+
+*   **Community Development Council (CDC) Vouchers：**
+    *   所有新加坡家庭都将获得额外的 CDC 消费券。
+    *   这些消费券可用于参与活动的邻里商家和小贩。
+
+*   **Cost-of-Living Special Payment：**
+    *   符合条件的新加坡成年人将获得一次性现金支付，金额在 200 到 400 新元之间。
+
+*   **U-Save rebates：**
+    *   符合条件 HDB 家庭可以获得额外的 U-Save 回扣，以帮助他们支付水电费。
+
+*   **Service and Conservancy Charges (S&CC) Rebate：**
+    *   符合条件的 HDB 家庭将获得额外的 S&CC 回扣，以帮助他们支付市政费。
+
+# 申请步骤
+
+由于文件中没有详细说明具体申请步骤，我建议您访问政府官方网站或联系相关机构，以获取更准确的信息。
+
+为了更好地回答您的问题，请问您具体对哪个乐龄补贴计划感兴趣？或者您指的是针对老年人的所有政府补助吗？
+
+
+----------------------------------------
+
+Session started at: 2025-01-19 23:39:44
+----------------------------------------
+
+user: "Hai, saya ingin tahu lebih lanjut mengenai skim subsidi warga emas yang ditawarkan oleh kerajaan. Apakah syarat-syarat kelayakannya? Apakah ada bantuan kewangan tambahan yang disediakan untuk warga emas? Dan, bagaimana cara untuk mendaftar bagi skim ini?"
+
+assistant: Hai, berikut adalah informasi mengenai skim subsidi warga emas berdasarkan dokumen Bajet 2024:
+
+# Skim Sokongan Warga Emas
+
+Skim ini memberikan bantuan tunai setiap suku tahun kepada warga emas yang layak.
+
+*   **Penerima:** Warga Emas Singapura berumur 65 tahun ke atas.
+*   **Kriteria Kelayakan (mulai 2025):**
+    *   Warganegara Singapura
+    *   Berumur 65 tahun ke atas
+    *   Jumlah caruman CPF tidak lebih daripada \$140,000
+    *   Tinggal di flat HDB 1-bilik hingga 5-bilik
+    *   Penerima dan pasangan tidak memiliki flat HDB 5-bilik atau lebih besar, harta persendirian, atau pelbagai harta.
+    *   Pendapatan isi rumah bulanan per kapita tidak melebihi \$2,300.
+*   **Bantuan Kewangan:**
+    *   Pembayaran tunai suku tahun dari \$215 hingga \$1,080, bergantung pada jenis flat HDB dan pendapatan isi rumah bulanan per kapita (mulai 2025).
+*   **Pendaftaran:** Tidak perlu mendaftar.
+
+# Pakej Majulah
+
+Terdapat beberapa komponen dalam Pakej Majulah yang memberi manfaat kepada warga emas:
+
+## Bonus Simpanan dan Perolehan
+
+*   **Penerima:** Warga emas yang bekerja dan memenuhi syarat pendapatan.
+*   **Kriteria Kelayakan:**
+    *   Lahir pada tahun 1973 atau sebelumnya
+    *   Warganegara Singapura yang menetap di Singapura
+    *   Bekerja atau bekerja sendiri
+    *   Pendapatan bulanan purata pekerjaan atau perdagangan dalam Tahun Taksiran sebelumnya adalah \$500 hingga \$6,000
+    *   Tinggal di harta dengan Nilai Tahunan sehingga \$31,000
+    *   Tidak memiliki lebih dari 1 harta.
+*   **Bantuan Kewangan:** Top-up CPF tahunan sebanyak \$400 hingga \$1,000, mengikut peringkat pendapatan. Warga emas berpendapatan rendah akan menerima top-up CPF yang lebih tinggi.
+*   **Pendaftaran:** Tidak perlu mendaftar.
+
+## Bonus Simpanan Persaraan
+
+*   **Penerima:** Warga emas yang mempunyai simpanan persaraan CPF di bawah Jumlah Persaraan Asas 2023.
+*   **Kriteria Kelayakan:**
+    *   Lahir pada tahun 1973 atau sebelumnya
+    *   Warganegara Singapura yang menetap di Singapura
+    *   Simpanan persaraan CPF di bawah Jumlah Persaraan Asas 2023 sebanyak \$99,400
+    *   Tinggal di harta dengan Nilai Tahunan sehingga \$25,000
+    *   Simpanan persaraan CPF merujuk kepada jumlah baki Akaun Persaraan (RA) dan akaun CPF LIFE, atau jumlah baki Akaun Biasa dan Akaun Khas jika RA belum dibuat.
+*   **Bantuan Kewangan:** Top-up CPF sekali sahaja sebanyak \$1,000 atau \$1,500, mengikut peringkat simpanan persaraan CPF.
+*   **Pendaftaran:** Tidak perlu mendaftar.
+
+## Bonus MediSave
+
+*   **Penerima:** Warga emas yang layak.
+*   **Kriteria Kelayakan:**
+    *   Lahir pada tahun 1973 atau sebelumnya
+    *   Warganegara Singapura
+*   **Bantuan Kewangan:** Bonus CPF sekali sahaja sehingga \$2,000, mengikut peringkat umur, Nilai Tahunan tempat tinggal, dan bilangan harta yang dimiliki.
+*   **Pendaftaran:** Tidak perlu mendaftar.
+
+# Bonus MediSave Tambahan
+
+*   **Penerima:** Semua warga Singapura dewasa.
+*   **Kriteria Kelayakan:**
+     *   Warganegara Singapura
+     *   Berumur 21 hingga 50 tahun.
+*   **Bantuan Kewangan:** Bonus MediSave sekali sahaja sehingga \$300.
+*   **Pendaftaran:** Tidak perlu mendaftar.
+
+# Bantuan Tambahan
+
+*   **Peningkatan Threshold Pendapatan:** Threshold pendapatan per kapita isi rumah akan ditingkatkan untuk skim subsidi penjagaan kesihatan dan sokongan sosial yang berkaitan.
+*   **Skim Simpanan Persaraan Padanan (MRSS):** Skim ini membantu warga Singapura berumur 55 tahun ke atas dengan simpanan CPF yang kurang, dengan memberikan padanan satu-dengan-satu untuk top-up tunai ke akaun CPF mereka. Skim ini akan diperluas untuk mereka yang berumur lebih dari 70 tahun, dengan had padanan tahunan ditingkatkan menjadi \$2,000 dan had padanan seumur hidup sebanyak \$20,000.
+
+Untuk maklumat lebih lanjut mengenai skim-skim ini, sila beritahu saya, adakah anda ingin tahu mengenai skim sokongan kewangan yang lain khusus untuk warga emas, atau ingin mengetahui maklumat lebih lanjut mengenai salah satu skim yang dinyatakan di atas?
+
+
+----------------------------------------
+
+Session started at: 2025-01-19 23:40:13
+----------------------------------------
+
+user: नमस्ते, मैं सरकार द्वारा पेश की जाने वाली वरिष्ठ नागरिक सब्सिडी योजनाओं के बारे में और जानना चाहता हूँ। कृपया बताएं कि पात्रता मानदंड क्या हैं? क्या वरिष्ठ नागरिकों के लिए कोई अतिरिक्त वित्तीय सहायता उपलब्ध है? और, इस योजना के लिए पंजीकरण कैसे करें?
+
+assistant: नमस्ते, वरिष्ठ नागरिकों के लिए सरकार द्वारा पेश की जाने वाली योजनाओं के बारे में आपकी पूछताछ के लिए धन्यवाद। बजट 2024 के दस्तावेजों के आधार पर, यहां कुछ संबंधित जानकारी दी गई है:
+
+## वरिष्ठ नागरिकों के लिए सहायता
+
+बजट 2024 में वरिष्ठ नागरिकों के लिए कई योजनाओं का उल्लेख किया गया है, जिनका उद्देश्य उनके जीवन की गुणवत्ता में सुधार करना है:
+
+*   **मजुला पैकेज**: यह पैकेज लगभग 1.6 मिलियन सिंगापुरवासियों को लाभान्वित करेगा, जिसकी कुल लागत 8.2 बिलियन डॉलर होगी। इस पैकेज में निम्नलिखित शामिल हैं:
+    *   **वरिष्ठ नागरिक बोनस**: 65 वर्ष से अधिक आयु के बुजुर्गों के लिए एक विशेष बोनस दिया जाएगा जो 25,000 डॉलर या उससे कम की वार्षिक मूल्य वाली संपत्ति में रहते हैं और जिनके पास एक से अधिक संपत्ति नहीं है।
+    *   **मेडिसैव बोनस**: 1973 या उससे पहले पैदा हुए सभी वरिष्ठ नागरिकों को एक बार मेडिसैव बोनस मिलेगा। कम साधन वाले युवा वरिष्ठ नागरिकों को 1,500 डॉलर की उच्च राशि मिलेगी और अन्य सभी वरिष्ठ नागरिकों को 750 डॉलर मिलेंगे।
+*   **आयु अच्छी तरह से एसजी**: इस योजना के तहत वरिष्ठ नागरिकों के लिए लगभग 3.5 बिलियन डॉलर का समर्थन दिया जा रहा है, जिसके तहत उनके घर और समुदायों में बुढ़ापे को बेहतर बनाने के लिए निम्नलिखित प्रावधान किए गए हैं:
+    *   **वरिष्ठ-अनुकूल होम फिटिंग**: इसमें चौड़े शौचालय के प्रवेश द्वार और शॉवर सीट जैसे प्रावधान शामिल होंगे।
+    *   **वरिष्ठ नागरिकों के लिए बेहतर परिवहन**: इसमें आश्रय वाले लिंकवे, वरिष्ठ-अनुकूल सुविधाओं वाले बस स्टॉप और सुरक्षित पैदल यात्री-अनुकूल सड़कें शामिल होंगी।
+
+## अन्य सहायता योजनाएं
+
+वरिष्ठ नागरिकों के लिए कुछ अतिरिक्त समर्थन उपाय भी उपलब्ध हैं:
+
+*   **कॉस्ट-ऑफ-लिविंग स्पेशल पेमेंट**: यह 200 से 400 डॉलर के बीच का नकद भुगतान है जो उन वयस्क सिंगापुरवासियों को दिया जाएगा जिनकी कर योग्य आय 100,000 डॉलर तक है और जिनके पास एक से अधिक संपत्ति नहीं है।
+*   **यू-सेव रिबेट**: यह उपयोगिता बिलों में वृद्धि से निपटने में मदद करने के लिए एकमुश्त अतिरिक्त यू-सेव रिबेट है। योग्य एच डी बी परिवार 2024 में नियमित यू-सेव रिबेट का ढाई गुना या 950 डॉलर तक प्राप्त कर सकते हैं।
+*  **सेवा और संरक्षण शुल्क छूट**: एच डी बी फ्लैटों के लिए एक अतिरिक्त एकमुश्त सेवा और संरक्षण शुल्क (एस एंड सी सी) छूट दी जाएगी। योग्य एच डी बी परिवारों को 2024 में चार महीने तक की छूट मिलेगी।
+*  **लाइफ एसजी क्रेडिट्स**: सभी पूर्व और वर्तमान राष्ट्रीय सैनिकों को 200 डॉलर के लाइफ एसजी क्रेडिट प्रदान किए जाएंगे।
+*  **अतिदेय आवासीय संपत्ति कर**: योग्य सेवानिवृत्त लोगों के लिए 65 वर्ष और उससे अधिक आयु के लोगों के लिए आवासीय संपत्ति कर बिलों के लिए ब्याज-मुक्त गिरो किस्त योजना को 24 महीने तक बढ़ाया जाएगा।
+
+## पंजीकरण
+
+बजट 2024 के दस्तावेजों में योजनाओं के लिए पंजीकरण करने के तरीके के बारे में कोई विस्तृत जानकारी नहीं है। हालाँकि, यदि आपके पास किसी विशिष्ट योजना के बारे में कोई प्रश्न हैं, तो आप सरकार द्वारा संचालित वेबसाइट https://go.gov.sg/askpayout1 पर पूछताछ कर सकते हैं।
+
+क्या आप किसी विशिष्ट योजना के बारे में अधिक जानकारी चाहते हैं? जैसे कि क्या आप जानना चाहते हैं कि आप उपरोक्त योजनाओं में से किसी के लिए योग्य हैं या नहीं, या आपको पंजीकरण प्रक्रिया में सहायता चाहिए?
+
+
+----------------------------------------
+
+Session started at: 2025-01-19 23:40:54
+----------------------------------------
+
+user: Hai, saya ingin tahu lebih lanjut mengenai skim subsidi warga emas yang ditawarkan oleh kerajaan. Apakah syarat-syarat kelayakannya? Apakah ada bantuan kewangan tambahan yang disediakan untuk warga emas? Dan, bagaimana cara untuk mendaftar bagi skim ini?
+
+assistant: Hai, berikut adalah maklumat mengenai beberapa skim subsidi untuk warga emas yang ditawarkan oleh kerajaan, berdasarkan dokumen Bajet 2024:
+
+# Skim Sokongan Warga Emas (Silver Support Scheme)
+
+Skim ini menyediakan bayaran tunai setiap suku tahun kepada warga emas yang layak.
+
+## Syarat Kelayakan (mulai 2025):
+
+*   Warganegara Singapura
+*   Berumur 65 tahun ke atas
+*   Jumlah caruman CPF tidak lebih daripada \$140,000
+*   Tinggal di flat HDB 1 bilik hingga 5 bilik
+*   Penerima dan pasangan tidak memiliki flat HDB 5 bilik atau lebih besar, hartanah persendirian, atau lebih daripada satu hartanah
+*   Pendapatan isi rumah per kapita bulanan tidak lebih daripada \$2,300
+
+## Bantuan Kewangan:
+
+*   Bayaran tunai setiap suku tahun dari \$215 hingga \$1,080, bergantung pada jenis flat HDB dan pendapatan isi rumah per kapita bulanan
+*   Pembayaran akan bermula dari 2025
+
+# Pakej Majulah
+
+Pakej ini menyediakan beberapa jenis bantuan kewangan dan simpanan untuk warga emas:
+
+## Bonus Simpanan dan Pendapatan (Earn and Save Bonus)
+
+*   Warga emas yang bekerja boleh menerima top-up CPF tahunan sebanyak \$400 hingga \$1,000, bergantung pada pendapatan
+*   Warga emas berpendapatan rendah akan menerima top-up CPF yang lebih tinggi
+*   Syarat Kelayakan:
+    *   Lahir pada tahun 1973 atau sebelumnya
+    *   Warganegara Singapura yang tinggal di Singapura
+    *   Bekerja atau bekerja sendiri
+    *   Pendapatan bulanan purata dari \$500 hingga \$6,000 pada Tahun Taksiran sebelumnya
+    *   Tinggal di hartanah dengan Nilai Tahunan sehingga \$31,000
+    *   Tidak memiliki lebih daripada 1 hartanah
+
+## Bonus Simpanan Persaraan (Retirement Savings Bonus)
+
+*   Top-up CPF sekali sahaja sebanyak \$1,000 atau \$1,500 untuk warga emas yang simpanan persaraannya di bawah Jumlah Persaraan Asas (Basic Retirement Sum) 2023
+*   Syarat Kelayakan:
+    *   Lahir pada tahun 1973 atau sebelumnya
+    *   Warganegara Singapura yang tinggal di Singapura
+    *   Simpanan persaraan CPF di bawah Jumlah Persaraan Asas 2023 (\$99,400)
+    *   Tinggal di hartanah dengan Nilai Tahunan sehingga \$25,000
+
+## Bonus MediSave
+
+*   Top-up CPF sekali sahaja sehingga \$2,000, bergantung pada umur, Nilai Tahunan tempat tinggal, dan bilangan hartanah yang dimiliki
+*   Syarat Kelayakan:
+    *   Lahir pada tahun 1973 atau sebelumnya
+    *   Warganegara Singapura
+
+# Bonus MediSave (Untuk Semua Warga Singapura Dewasa)
+
+*   Bonus CPF sekali sahaja sehingga \$500, bergantung pada umur, Nilai Tahunan tempat tinggal, dan bilangan hartanah yang dimiliki
+*   Syarat Kelayakan:
+    *   Lahir antara tahun 1974 hingga 2003
+    *   Warganegara Singapura
+
+## Cara Mendaftar:
+
+*   Kebanyakan skim ini tidak memerlukan permohonan.
+*   Agensi yang berkaitan akan menilai kelayakan secara automatik dan memberikan bayaran yang sesuai.
+*   Anda boleh menghubungi talian hotline yang disediakan atau menghantar pertanyaan dalam talian untuk mendapatkan maklumat lanjut.
+
+Saya tidak mempunyai maklumat yang cukup mengenai cara pendaftaran yang khusus untuk setiap skim ini berdasarkan dokumen Bajet 2024. Untuk mendapatkan maklumat yang lebih terperinci, anda boleh menghubungi pihak berkuasa yang berkaitan.
+
+Adakah anda ingin tahu lebih lanjut mengenai mana-mana skim yang dinyatakan di atas, atau adakah ada skim lain yang ingin anda ketahui lebih lanjut?
+
+
+----------------------------------------
+

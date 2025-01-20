@@ -39,14 +39,15 @@ def save_chat_history(user_message: str, assistant_message: str, new_session: bo
     
     today = date.today().strftime("%Y-%m-%d")
     file_path = os.path.join(history_dir, f"{today}.txt")
-
+    
+    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S") # Define now here, before the if statement
+    
     try:
         with open(file_path, "a", encoding="utf-8") as f:
             if new_session:
-              now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
               f.write(f"Session started at: {now}\n")
               f.write("-" * 40 + "\n\n")
-            f.write(f"user: {user_message}\n\n")
+            f.write(f"user: {user_message}\t{now}\n\n")
             f.write(f"assistant: {assistant_message}\n\n")
             f.write("-" * 40 + "\n\n")  # Add a separator between turns
         print(f"Chat history saved to: {file_path}")
