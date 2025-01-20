@@ -18,8 +18,33 @@ st.title("Feedback Analysis Dashboard")
 
 # Sidebar
 st.sidebar.title("Navigation")
-st.sidebar.write("Use the options below to explore the dashboard.")
+st.sidebar.write("Use the options below to navigate the dashboard.")
 selected_section = st.sidebar.radio("Go to", ["Preprocess Data", "Overview Report", "Visual Charts", "Settings"])
+
+st.sidebar.markdown("---")
+st.sidebar.header("Dashboard Instructions")
+
+if selected_section == "Preprocess Data":
+    st.sidebar.write("""
+        Use this section to preprocess feedback data.
+        Select a date range, process data, and manage existing preprocessed data.
+    """)
+elif selected_section == "Overview Report":
+    st.sidebar.write("""
+        Use this section to view a high-level summary of the feedback.
+        Select a preprocessed data file to load feedback data.
+    """)
+elif selected_section == "Visual Charts":
+        st.sidebar.write("""
+        Use this section to visualize the feedback data with charts.
+        Select a preprocessed data file to load feedback data.
+    """)
+elif selected_section == "Settings":
+        st.sidebar.write("""
+        Use this section to modify dashboard settings.
+        """)
+
+st.sidebar.markdown("---")
 
 # --- Data Loading Logic ---
 def load_preprocessed_data(filename):
@@ -42,10 +67,10 @@ def load_preprocessed_data(filename):
 
 def save_preprocessed_data(df, start_date, end_date):
     # Format the date range to create the filename
-    filename = f"{start_date.strftime('%Y-%m-%d')}-{end_date.strftime('%Y-%m-%d')}"
+    formatted_date_range = f"{start_date.strftime('%b %d, %Y')} - {end_date.strftime('%b %d, %Y')}"
     os.makedirs("data/preprocessed", exist_ok=True)
-    file_path_parquet = os.path.join("data/preprocessed", f"{filename}.parquet")
-    file_path_csv = os.path.join("data/preprocessed", f"{filename}.csv")
+    file_path_parquet = os.path.join("data/preprocessed", f"{formatted_date_range}.parquet")
+    file_path_csv = os.path.join("data/preprocessed", f"{formatted_date_range}.csv")
     
     try:
         # Generate the AI summary before saving
@@ -53,7 +78,7 @@ def save_preprocessed_data(df, start_date, end_date):
         df['ai_summary'] = ai_summary # Add the ai_summary as a column
         df.to_parquet(file_path_parquet, index = False)
         df.to_csv(file_path_csv, index=False)
-        st.success(f"Data saved to {filename}.parquet and {filename}.csv")
+        st.success(f"Data saved to {formatted_date_range}.parquet and {formatted_date_range}.csv")
     except Exception as e:
         st.error(f"Error saving data: {e}")
 
@@ -71,11 +96,13 @@ def delete_preprocessed_data(filename):
     except Exception as e:
         st.error(f"Error deleting file {filename}: {e}")
 
+
 # --- Preprocess Data Page ---
 if selected_section == "Preprocess Data":
     st.header("Preprocess Data")
     st.write("Select a date range to preprocess feedback data:")
-
+    st.write("Use the calendar to choose your preferred date range, then process the data")
+    
     # Date Range Selector
     start_date = st.date_input("Start Date", date.today() - timedelta(days=7))
     end_date = st.date_input("End Date", date.today())
@@ -84,11 +111,11 @@ if selected_section == "Preprocess Data":
         st.error("Start date must be before end date!")
     else:
         # File Exists Check
-        filename = f"{start_date.strftime('%Y-%m-%d')}-{end_date.strftime('%Y-%m-%d')}"
-        file_path_parquet = os.path.join("data/preprocessed", f"{filename}.parquet")
-        file_path_csv = os.path.join("data/preprocessed", f"{filename}.csv")
+        formatted_date_range = f"{start_date.strftime('%b %d, %Y')} - {end_date.strftime('%b %d, %Y')}"
+        file_path_parquet = os.path.join("data/preprocessed", f"{formatted_date_range}.parquet")
+        file_path_csv = os.path.join("data/preprocessed", f"{formatted_date_range}.csv")
         if os.path.exists(file_path_parquet) and os.path.exists(file_path_csv):
-          st.warning(f"A preprocessed data file already exists for {filename}. You can delete it below, or select a new date range.")
+          st.warning(f"A preprocessed data file already exists for {formatted_date_range}. You can delete it below, or select a new date range.")
         else:
           if st.button("Process Data"):
               with st.spinner("Processing data..."):
@@ -97,15 +124,17 @@ if selected_section == "Preprocess Data":
                     save_preprocessed_data(df, start_date, end_date)
                   else:
                       st.warning("No feedback found for the selected date range.")
-
+    
+    st.markdown("---")
     # List existing files
     st.subheader("Existing Preprocessed Data")
-    preprocessed_files = [f for f in os.listdir("data/preprocessed") if f.endswith((".parquet", ".csv"))]
+    st.write("Select preprocessed files to delete.")
+    preprocessed_files = [f for f in os.listdir("data/preprocessed") if f.endswith(".parquet")]
     if preprocessed_files:
         selected_files_to_delete = st.multiselect("Select files to delete", preprocessed_files)
         if st.button("Delete Selected Files"):
-          for file_to_delete in selected_files_to_delete:
-            delete_preprocessed_data(file_to_delete)
+            for file_to_delete in selected_files_to_delete:
+                delete_preprocessed_data(file_to_delete)
     else:
         st.write("No preprocessed data found.")
     
@@ -114,9 +143,10 @@ elif selected_section == "Overview Report":
     st.header("Feedback Overview")
     st.write("This section provides a high-level summary of all collected feedback.")
     st.markdown("---")
+    st.write("Select preprocessed data to view from the box below.")
 
     # Load Preprocessed Data
-    preprocessed_files = [f for f in os.listdir("data/preprocessed") if f.endswith((".parquet", ".csv"))]
+    preprocessed_files = [f for f in os.listdir("data/preprocessed") if f.endswith(".parquet")]
     if preprocessed_files:
       selected_file = st.selectbox("Select preprocessed data:", preprocessed_files)
       if selected_file:
@@ -153,9 +183,11 @@ elif selected_section == "Overview Report":
 # --- Visual Charts Page ---
 elif selected_section == "Visual Charts":
     st.header("Feedback Visualizations")
+    st.write("Select preprocessed data to view from the box below.")
+    st.markdown("---")
 
     # Load Preprocessed Data
-    preprocessed_files = [f for f in os.listdir("data/preprocessed") if f.endswith((".parquet", ".csv"))]
+    preprocessed_files = [f for f in os.listdir("data/preprocessed") if f.endswith(".parquet")]
     if preprocessed_files:
       selected_file = st.selectbox("Select preprocessed data:", preprocessed_files)
       if selected_file:
@@ -246,6 +278,3 @@ elif selected_section == "Settings":
     theme = st.selectbox("Choose theme", ["Light", "Dark"])
     notifications = st.checkbox("Enable notifications", value=True)
     st.button("Save Settings")
-
-# Footer
-st.write("Developed with ❤️ using Streamlit")
