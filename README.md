@@ -1,34 +1,35 @@
-# KiasuKaki - Government Scheme Chatbot and Feedback Analyser
+# KiasuKaki - Government Scheme Chatbot and Feedback Analyzer
 
 ## Project Description
 
-KiasuKaki is a chatbot application developed in response to the hackathon challenge: _How can we leverage Generative AI to enhance or propose new government initiatives and services in smart cities?_ Our solution harnesses the power of Generative AI through Google's Gemini API to improve access to and understanding of government information for citizens within a smart city context. We aim to enhance existing services by providing a conversational interface to complex information, alongside a tool for feedback analysis to further shape future initiatives.
+KiasuKaki is a chatbot application developed for the hackathon challenge: _"How can we leverage Generative AI to enhance or propose new government initiatives and services in smart cities?"_ Our solution utilizes Google's Gemini API to provide citizens with improved access to and understanding of government information within a smart city environment. We offer a conversational interface for complex information, alongside a robust feedback analysis tool to inform future policy and service improvements.
 
-This project addresses the challenge of information accessibility in smart cities, where complex government documents and initiatives can be overwhelming for citizens. By combining natural language processing with efficient document retrieval and analysis, KiasuKaki allows users to easily obtain clear and concise answers to their questions, promoting a more informed and engaged populace. Furthermore, the included feedback analysis tool enables city administrators to use real-time feedback to improve current services, which enhances government efficiency and responsiveness.
+This project tackles the challenge of information accessibility in smart cities, where dense government documents and policies can often overwhelm citizens. By combining natural language processing, efficient document retrieval, and insightful feedback analysis, KiasuKaki empowers users to quickly find clear and concise answers to their questions. This approach promotes a more informed and engaged populace. Additionally, the feedback analysis tool provides valuable, real-time insights that enable government administrators to enhance existing services, and make data driven decisions, improving government efficiency and responsiveness.
 
 **Key Features:**
 
-- **AI-Powered Chatbot:** Utilises Google's Gemini API for natural language understanding and generation, providing citizens with an intuitive way to access information about government schemes.
-- **Intelligent Document Retrieval:** Leverages ChromaDB to efficiently search and retrieve relevant information from government documents, reducing time spent searching for specific answers.
-- **Contextual Responses:** Generates responses based on the provided documents, ensuring information is accurate and contextually relevant, whilst avoiding external knowledge or assumptions.
-- **Pre-Processed Document Database:** The ChromaDB database has been pre-processed with documents from Budget 2024, available in the `documents` folder.
-- **Document Customisation:** Users are free to replace or add to the existing documents in the `documents` folder with updated ones (e.g., Budget 2025). Preprocessing is only required when new documents are added or existing documents are updated.
-- **Feedback Analysis Tool:** Provides insights into public sentiment regarding government schemes, enabling data-driven decisions for improvement.
-- **User-Friendly Interface:** Built with Streamlit to offer an accessible and easy-to-use platform for all citizens.
+- **AI-Powered Conversational Chatbot:** Employs Google's Gemini API for natural language understanding and generation, enabling citizens to interact with a chatbot to access government scheme information in an intuitive way.
+- **Intelligent Document Retrieval:** Uses ChromaDB for efficient search and retrieval of relevant information from government documents, reducing time spent on manual searches and long documents.
+- **Flexible Document Customisation:** Users can easily replace or add to the existing documents in the `/data/documents` folder with updated documents (e.g., Budget 2025 or new schemes). Only run the preprocessing step if you have modified this folder with new or updated documents.
+- **Comprehensive Feedback Analysis Tool:** Provides insights into user sentiment and feedback regarding government policies and schemes, enabling data-driven decisions for future improvements.
+- **Interactive Dashboard Visualisations:** A dedicated dashboard visualises feedback with charts, graphs and summaries using data-driven approaches.
+- **User-Friendly Interface:** Developed with Streamlit to ensure an accessible and intuitive platform for all users, with an easy-to-use and interactive chat interface and dashboard.
+- **Data Preprocessing and Storage**: Preprocesses feedback data for the dashboard, for easy access to summarised information without calling the API again, this includes pre-computed AI summarisation.
+- **Data Filtering:** The dashboard provides useful data filtering options to make specific analysis easier, such as date filtering and category/sentiment filters.
 
 ## Setup Instructions
 
-To get the KiasuKaki project up and running, follow these steps:
+To set up and run KiasuKaki, follow these steps:
 
 1.  **Clone the Repository:**
 
-    ```bash
+    ```
     git clone <your-repo-url>
     cd <your-repo-directory>
     ```
 
 2.  **Create a Virtual Environment (Recommended):**
-    It's highly recommended to create a virtual environment to avoid conflicts with other Python projects.
+    It is highly recommended to use a virtual environment to avoid dependency conflicts.
 
     ```
     python -m venv venv
@@ -49,44 +50,50 @@ To get the KiasuKaki project up and running, follow these steps:
       ```
 
 3.  **Install Dependencies:**
-    Make sure you have Python 3.7+ installed. Then, install the required packages using pip:
-    ```bash
+    Ensure you have Python 3.7+ installed. Then, use pip to install the required packages:
+
+    ```
     pip install -r requirements.txt
     ```
-    If you don't have a `requirements.txt` file, create one in the root of the project directory with the following content:
-        ```
-        streamlit
-        python-dotenv
-        google-generativeai
-        chromadb
-        langchain
-        pypdf
-        ```
+
+    If you don't have a `requirements.txt` file, create one in the root of the project directory with this content:
+
+    ```
+    streamlit
+    python-dotenv
+    google-generativeai
+    chromadb
+    langchain
+    pypdf
+    pandas
+    plotly
+    textblob
+    ```
 
 4.  **Set up Environment Variables:**
 
     - Create a `.env` file in the root of the project directory.
-    - Add your Google Gemini API key to the `.env` file:
+    - Add your Google Gemini API key to the `.env` file, for example:
 
       ```
       GEMINI_API_KEY=YOUR_GEMINI_API_KEY
       ```
 
-    - You'll need to obtain a Gemini API key from Google's AI Studio, refer to the Google documentation for more information on how to do this.
+    - Obtain your Gemini API key from Google's AI Studio (refer to the Google documentation for details).
 
-      **Note:** As of 12 Jan 2025, the `gemini-2.0-flash-exp` model is free to use under the Gemini API, so there is no need to pay for usage.
+    **Note:** As of January 12, 2025, the `gemini-2.0-flash-exp` model is free to use under the Gemini API.
 
-5.  **Document Folder:** The `documents` folder contains the current Budget 2024 documents that are fed to ChromaDB.
+5.  **Document Folder:** The `/data/documents` folder contains the source documents that feed the chatbot.
 
-6.  **Run the preprocessing script (if necessary):**
+6.  **Preprocess the document database (if necessary):**
 
-- **Only if you have changed the documents or added new ones**, run the following code
+    - Only run the preprocessing step _if you have changed the documents or added new ones_.
 
-  ```
-  python preprocessing.py
-  ```
+      ```
+      python preprocessing.py
+      ```
 
-  This step preprocesses your PDF documents, chunks them into smaller pieces, creates embeddings using the Gemini API, and stores them into a ChromaDB database. Ensure this runs without any errors or warnings.
+    This step processes your PDF documents, creating embeddings using Gemini API, and storing them into the ChromaDB database. Make sure the preprocessing runs without any errors or warnings.
 
 7.  **Run the Chatbot Application:**
 
@@ -94,38 +101,37 @@ To get the KiasuKaki project up and running, follow these steps:
     streamlit run app.py
     ```
 
-    This command starts the Streamlit application, and you can access it in your browser.
+    This will start the Streamlit application, accessible via the URL provided in your terminal (usually `http://localhost:8501`).
 
-8.  **Run the Feedback Analysis Tool:**
+8.  **Run the Dashboard:**
     ```
-     streamlit run feedback.py
+    streamlit run dashboard.py
     ```
-    This command starts the Streamlit feedback analysis tool, you can access it in your browser.
+    This starts the Streamlit dashboard, available at the URL specified in the terminal.
 
 ## Usage Guide
 
-### Chatbot Application (app.py):
+### Chatbot Application (`app.py`):
 
-1.  **Access the Application:** Open your web browser and go to the URL provided by Streamlit after running the `streamlit run app.py` command (usually `http://localhost:8501`).
-2.  **Ask Questions:** Type your questions about government schemes in the chat input box at the bottom of the page.
-3.  **Read Responses:** The chatbot will respond with relevant information based on the documents provided.
-4.  **Provide Feedback:** Use the sidebar to submit feedback on the chatbot's performance or the schemes in general.
-5.  **End Chat Session:** You can end the current chat session with the button in the sidebar, this will clear the session and the history.
+1.  **Access the Application:** Go to the URL provided by Streamlit in your web browser.
+2.  **Ask Questions:** Use the chat input at the bottom of the page to ask questions about Singaporean government schemes.
+3.  **Receive Responses:** The chatbot will provide relevant and clear answers based _only_ on the information in the documents provided.
+4.  **Provide Feedback:** Use the sidebar to submit feedback on the chatbot's performance or the policies and schemes that are being discussed.
+5.  **End Session:** Click the button in the sidebar to reset the current chat session and its history.
 
-### Feedback Analysis Tool (feedback.py):
+### Dashboard (`dashboard.py`):
 
-1. **Access the Tool:** Open your web browser and go to the URL provided by Streamlit after running `streamlit run feedback.py` (usually `http://localhost:8501`).
-2. **View Raw Feedback:** Expand the "View Raw Feedback" section to see the feedback that users have submitted through the chatbot.
-3. **Ask Questions:** Type your specific questions related to feedback analysis in the chat input box.
-4. **Receive Analysis:** The chatbot will respond based on the data available, you can ask questions like the average rating, or for a summarisation of the feedback given
-5. **End Chat Session:** You can end the current chat session with the button in the sidebar, this will clear the session and the history.
+1.  **Access the Dashboard:** Navigate to the provided URL in your browser.
+2.  **Preprocess Data:** The first step is to go to the "Preprocess Data" section, select a date range, and press "Process Data" to begin processing the feedback.
+3.  **View the Overview Report:** Go to the Overview Report section and select the data range, to see an overview of the feedback such as the average sentiment and summarisation.
+4.  **View the Visual Charts:** Use the "Visual Charts" to see the graphical visualisations of the feedback provided, such as a pie chart of sentiment or a bar chart of feedback categories.
+5.  **View Specific Feedback:** Use the "View Feedback" page to see all of the feedback data in a table, you can also apply filters such as category and sentiment.
+6.  **Modify Settings:** In the "Settings" page, you can adjust the settings for the dashboard.
 
 ### Example Queries:
 
-- **Chatbot:** "What are the eligibility criteria for the cost of living special payment?"
-- **Chatbot:** "How much will I get if I am eligible for the special payment?"
-- **Feedback:** "How many users gave a rating of 4 or higher?"
-- **Feedback:** "List and explain the positive feedback that was given"
+- **Chatbot:** "What are the requirements to be eligible for the cost of living special payment?"
+- **Chatbot:** "How much money will I get if I am eligible for the special payment?"
 
 ## Contributors
 
@@ -138,9 +144,10 @@ To get the KiasuKaki project up and running, follow these steps:
 ## Additional Notes
 
 - **Limitations:**
-  - The chatbot's responses are limited by the information present in the provided documents. It cannot answer questions outside of that context.
-  - The feedback analysis tool requires the `policy_feedback.txt` file to contain valid feedback in the right format.
+  - The chatbot is limited by the knowledge within the provided document database and does not use external knowledge.
+  - The dashboard requires valid feedback data to provide correct analysis.
 - **Future Improvements:**
   - Add support for multiple document types beyond PDFs.
   - Implement user authentication.
-  - Improve the chatbot's response formatting and contextual understanding using advanced Gemini techniques.
+  - Enhance the chatbot's response format and contextual understanding using advanced Gemini techniques and other LLM tools.
+  - Implement a more sophisticated system to extract more granular data from user feedback.
