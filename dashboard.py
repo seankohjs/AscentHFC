@@ -13,8 +13,26 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
+# Create a function to style text with a gradient
+def gradient_text(text, gradient_colors, font_size="32px", font_weight="bold"):
+    gradient_style = f"""
+    <span style="
+        background: linear-gradient(to right, {', '.join(gradient_colors)});
+        -webkit-background-clip: text;
+        color: transparent;
+        font-size: {font_size};
+        font-weight: {font_weight};
+    ">
+        {text}
+    </span>
+    """
+    return gradient_style
+
+# Define Gemini AI-like gradient colors (blue, purple, pink)
+gemini_colors = ["#CA6673", "#9177C7", "#4796E3"]
+
 # Title
-st.title("Feedback Analysis Dashboard")
+st.markdown(gradient_text("Feedback Analysis Dashboard", gemini_colors, font_size="55px"), unsafe_allow_html=True)
 
 # Sidebar
 st.sidebar.title("Navigation")
@@ -104,7 +122,8 @@ def delete_preprocessed_data(filename):
 
 # --- Preprocess Data Page ---
 if selected_section == "Preprocess Data":
-    st.header("Preprocess Data")
+    st.markdown("<h3><span style='border-bottom: 2px solid #FFF;'>Preprocess Data</span></h3>", unsafe_allow_html=True)
+    # st.header("Preprocess Data")
     st.write("Select a date range to preprocess feedback data:")
     st.write("Use the calendar to choose your preferred date range, then process the data")
     
@@ -132,7 +151,7 @@ if selected_section == "Preprocess Data":
     
     st.markdown("---")
     # List existing files
-    st.subheader("Existing Preprocessed Data")
+    st.markdown("<h3><span style='border-bottom: 2px solid #FFF;'>Existing Preprocessed Data</span></h3>", unsafe_allow_html=True)
     st.write("Select preprocessed files to delete.")
     preprocessed_files = [f for f in os.listdir("data/preprocessed") if f.endswith(".parquet")]
     if preprocessed_files:
@@ -164,16 +183,17 @@ elif selected_section == "Overview Report":
         overall_sentiment, total_feedback, positive_feedback, negative_feedback, category_counts, segments, df_monthly = process_data(df)
         ai_summary = df['ai_summary'].iloc[0]
         # Section for the first row
+        st.markdown("---")
         st.subheader(f"Average Sentiment: {overall_sentiment:.1f} | Total Feedback Count: {total_feedback}")
         st.write("This provides the average sentiment as well as the total number of feedback collected")
         st.markdown("---")
 
         # Section for the second row
-        st.subheader("AI Overall Summary of all feedback")
+        st.markdown("<h3><span style='border-bottom: 2px solid #FFF;'>AI Overall Summary of all feedback</span></h3>", unsafe_allow_html=True)
         st.write(ai_summary)
         st.markdown("---")
 
-        st.subheader("Feedback Counts")
+        st.markdown("<h3><span style='border-bottom: 2px solid #FFF;'>Feedback Counts</span></h3>", unsafe_allow_html=True)
         col1, col2, col3 = st.columns(3)
         with col1:
             st.metric("All Feedback", total_feedback, "+5%")
