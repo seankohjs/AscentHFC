@@ -4,4 +4,7 @@ google-generativeai
 chromadb
 langchain
 pypdf
-typing-extensions
+pandas
+plotly
+textblob
+langchain-community
